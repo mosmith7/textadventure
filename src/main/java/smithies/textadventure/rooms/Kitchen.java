@@ -5,6 +5,7 @@ import smithies.textadventure.command.UserInputCommand;
 public class Kitchen extends Room {
 
     private RoomName name = RoomName.KITCHEN;
+    private boolean isFirstEntrance = true;
 
     @Override
     public RoomName getName() {
@@ -12,10 +13,26 @@ public class Kitchen extends Room {
     }
 
     @Override
-    public void enter() {
-        System.out.println("Welcome to the Kitchen");
+    public boolean isFirstEntrance() {
+        return isFirstEntrance;
     }
 
+    @Override
+    public void enter() {
+        if (isFirstEntrance) {
+            displayFullDescription();
+            isFirstEntrance = false;
+        } else {
+            displayName();
+        }
+
+    }
+
+    @Override
+    public void displayFullDescription() {
+        displayName();
+        output.displayTextLines("You are in the kitchen");
+    }
     @Override
     public RoomName goNorth() {
         return RoomName.HALL;

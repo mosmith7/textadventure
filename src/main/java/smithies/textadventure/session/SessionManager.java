@@ -14,7 +14,9 @@ public class SessionManager {
     private Player player;
 
     public void startGame() {
-        player = new Player(allRooms.get(RoomName.KITCHEN));
+        displayStartingMessage();
+
+        player = new Player(allRooms.get(RoomName.HALL));
         player.enterRoom();
         while(true) {
             String input = inputRetriever.getLine();
@@ -23,11 +25,15 @@ public class SessionManager {
         }
     }
 
+    private void displayStartingMessage() {
+        System.out.println("You wake up on the floor. It is Christmas Day.");
+    }
+
     private void processCommand(UserInputCommand command) {
         if (UserInputCommand.EXIT.equals(command)) {
             System.exit(0);
         } else if (UserInputCommand.WAIT.equals(command)) {
-            System.out.println("You whistle tunelessly...");
+            System.out.println("You scratch your ears with your leg");
         } else if (UserInputCommand.SOUTH.equals(command)) {
             RoomName roomName = player.goSouth();
             player.setCurrentRoom(allRooms.get(roomName));
