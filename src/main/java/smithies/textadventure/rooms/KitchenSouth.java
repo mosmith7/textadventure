@@ -10,18 +10,19 @@ public class KitchenSouth extends Room {
     }
 
     @Override
-    public void displayFullDescription() {
-        displayName();
-        output.displayTextLines("You are in the kitchen.", "To the ");
+    public String[] getFullDescriptionLines() {
+        return new String[]{"You are in the kitchen.", "To the north the kitchen continues.",
+                "To the east is an open door"};
     }
+
     @Override
     public RoomName goNorth() {
-        return RoomName.HALL_SOUTH;
+        return RoomName.KITCHEN_NORTH;
     }
 
     @Override
     public RoomName goSouth() {
-        return RoomName.HALL_SOUTH;
+        return RoomName.DEADEND;
     }
 
     @Override
@@ -31,6 +32,6 @@ public class KitchenSouth extends Room {
 
     @Override
     public RoomName goWest() {
-        return RoomName.HALL_SOUTH;
+        return RoomName.DEADEND;
     }
 }

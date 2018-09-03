@@ -10,11 +10,10 @@ public class HallSouth extends Room {
     }
 
     @Override
-    public void displayFullDescription() {
-        displayName();
-        output.displayTextLines("There is a rug on the floor and a wooden shelf by the wall",
+    public String[] getFullDescriptionLines() {
+        return new String[]{"There is a rug on the floor and a wooden shelf by the wall",
                 "To the north, the hallway continues.", "To the east is a closed door.",
-                "To the south is a closed door.", "To the west is an open door.");
+                "To the south is a closed door.", "To the west is an open door."};
     }
 
     @Override

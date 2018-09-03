@@ -10,10 +10,9 @@ public class LivingRoom extends Room {
     }
 
     @Override
-    public void displayFullDescription() {
-        displayName();
-        output.displayTextLines("You are in the living room.", "There is a christmas tree in the corner",
-                "To the west, is an open door.", "To the north is a closed door.");
+    public String[] getFullDescriptionLines() {
+        return new String[]{"You are in the living room.", "There is a christmas tree in the corner",
+                "To the west, is an open door.", "To the north is a closed door."};
     }
 
     @Override

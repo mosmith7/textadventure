@@ -1,5 +1,6 @@
 package smithies.textadventure.command;
 
+import smithies.textadventure.item.ItemName;
 import smithies.textadventure.rooms.RoomName;
 import smithies.textadventure.session.AllRooms;
 import smithies.textadventure.session.Player;
@@ -7,13 +8,14 @@ import smithies.textadventure.ui.DisplayConsoleOutput;
 
 public class CommandInterpretter {
 
-    private DisplayConsoleOutput displayConsoleOutput = new DisplayConsoleOutput();
+    private DisplayConsoleOutput output = new DisplayConsoleOutput();
 
     public void processCommand(Player player, AllRooms allRooms, UserInputCommand command) {
+        //TODO: use switch statement
         if (UserInputCommand.EXIT.equals(command)) {
             System.exit(0);
         } else if (UserInputCommand.WAIT.equals(command)) {
-            displayConsoleOutput.displayTextLine("You scratch your ears with your leg");
+            output.displayTextLine("You scratch your ears with your leg");
         } else if (UserInputCommand.LOOK.equals(command)) {
             player.look();
         } else if (UserInputCommand.NORTH.equals(command)) {
@@ -28,6 +30,13 @@ public class CommandInterpretter {
         } else if (UserInputCommand.WEST.equals(command)) {
             RoomName roomName = player.goWest();
             handleRoomName(player, allRooms, roomName);
+        } else if (UserInputCommand.TAKE.equals(command)) {
+            if (player.canTakeItem(ItemName.TENNIS_BALL)) {
+                player.takeItem(ItemName.TENNIS_BALL);
+                output.displayTextLine("Taken.");
+            }
+        } else if (UserInputCommand.INVENTORY.equals(command)) {
+            player.viewInventory();
         }
     }
 
@@ -41,13 +50,13 @@ public class CommandInterpretter {
 
     private void handleInvalidRoom(RoomName roomName) {
         if (RoomName.LOCKED_DOOR.equals(roomName)) {
-            displayConsoleOutput.displayClosedDoorResponse();
+            output.displayClosedDoorResponse();
         } else if (RoomName.CLOSED_PUSH_DOOR.equals(roomName)) {
-            displayConsoleOutput.displayClosedDoorResponse();
+            output.displayClosedDoorResponse();
         } else if (RoomName.CLOSED_PULL_DOOR.equals(roomName)) {
-            displayConsoleOutput.displayClosedDoorResponse();
+            output.displayClosedDoorResponse();
         } else if (RoomName.DEADEND.equals(roomName)) {
-            displayConsoleOutput.displayTextLine("You walk over to the wall and curl up in a ball");
+            output.displayTextLine("You walk over to the wall and curl up in a ball");
         }
     }
 

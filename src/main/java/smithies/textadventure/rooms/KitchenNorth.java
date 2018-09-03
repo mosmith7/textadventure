@@ -2,7 +2,7 @@ package smithies.textadventure.rooms;
 
 public class KitchenNorth extends Room {
 
-    private RoomName name = RoomName.KITCHEN_SOUTH;
+    private RoomName name = RoomName.KITCHEN_NORTH;
 
     @Override
     public RoomName getName() {
@@ -10,11 +10,11 @@ public class KitchenNorth extends Room {
     }
 
     @Override
-    public void displayFullDescription() {
-        displayName();
-        output.displayTextLines("You are in the kitchen.", "To the south the kitchen continues",
-                "To the east there is an open door", "To the west there is a closed door");
+    public String[] getFullDescriptionLines() {
+        return new String[]{"You are in the kitchen.", "To the south the kitchen continues",
+                "To the east there is an open door", "To the west there is a closed door"};
     }
+
     @Override
     public RoomName goNorth() {
         return RoomName.DEADEND;

@@ -5,16 +5,15 @@ public class HallMiddle extends Room {
     private RoomName name = RoomName.HALL_MIDDLE;
 
     @Override
-    public RoomName getName() {
-        return name;
+    public String[] getFullDescriptionLines() {
+        return new String[]{"You are in a narrow hallway.",
+                "To the north, the hallway continues.", "To the east is an open door.",
+                "To the south the hallway continues.", "To the west is an closed door."};
     }
 
     @Override
-    public void displayFullDescription() {
-        displayName();
-        output.displayTextLines("You are in a narrow hallway.",
-                "To the north, the hallway continues.", "To the east is an open door.",
-                "To the south the hallway continues.", "To the west is an closed door.");
+    public RoomName getName() {
+        return name;
     }
 
     @Override

@@ -9,6 +9,9 @@ public enum UserInputCommand {
 
     WAIT,
     LOOK,
+    EXAMINE,
+    INVENTORY,
+    TAKE,
 
     EXIT,
     ;
