@@ -1,8 +1,11 @@
 package smithies.textadventure.session;
 
+import smithies.textadventure.command.CommandInterpretter;
 import smithies.textadventure.command.UserInputCommand;
 import smithies.textadventure.rooms.Room;
 import smithies.textadventure.rooms.RoomName;
+import smithies.textadventure.ui.DisplayConsoleOutput;
+import smithies.textadventure.ui.DisplayOutput;
 
 public class Player {
 
@@ -30,6 +33,10 @@ public class Player {
 
     public RoomName goWest() {
         return this.currentRoom.goWest();
+    }
+
+    public void look() {
+        currentRoom.displayFullDescription();
     }
 
     public void setCurrentRoom(Room currentRoom) {

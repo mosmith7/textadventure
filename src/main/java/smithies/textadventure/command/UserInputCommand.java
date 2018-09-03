@@ -8,6 +8,8 @@ public enum UserInputCommand {
     WEST,
 
     WAIT,
-    EXIT
+    LOOK,
+
+    EXIT,
     ;
 }

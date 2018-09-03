@@ -6,12 +6,22 @@ import smithies.textadventure.ui.DisplayOutput;
 public abstract class Room {
 
     protected DisplayOutput output = new DisplayConsoleOutput();
+    protected boolean isFirstEntrance = true;
+
+    protected boolean isFirstEntrance() {
+        return isFirstEntrance;
+    }
+
+    public void enter() {
+        if (isFirstEntrance()) {
+            displayFullDescription();
+            isFirstEntrance = false;
+        } else {
+            displayName();
+        }
+    }
 
     public abstract RoomName getName();
-
-    public abstract boolean isFirstEntrance();
-
-    public abstract void enter();
 
     public abstract void displayFullDescription();
 

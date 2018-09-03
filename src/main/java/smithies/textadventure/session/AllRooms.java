@@ -1,9 +1,6 @@
 package smithies.textadventure.session;
 
-import smithies.textadventure.rooms.Hall;
-import smithies.textadventure.rooms.Kitchen;
-import smithies.textadventure.rooms.Room;
-import smithies.textadventure.rooms.RoomName;
+import smithies.textadventure.rooms.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,8 +13,12 @@ public class AllRooms {
     private List<Room> rooms = new ArrayList<>();
 
     public AllRooms() {
-        rooms.add(new Kitchen());
-        rooms.add(new Hall());
+        rooms.add(new KitchenSouth());
+        rooms.add(new KitchenNorth());
+        rooms.add(new HallSouth());
+        rooms.add(new HallMiddle());
+        rooms.add(new HallNorth());
+        rooms.add(new LivingRoom());
     }
 
     public Room get(RoomName name) {
