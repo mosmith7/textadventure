@@ -11,8 +11,7 @@ public class HallSouth extends Room {
 
     @Override
     public String[] getFullDescriptionLines() {
-        return new String[]{"There is a rug on the floor and a wooden shelf by the wall",
-                "To the north, the hallway continues.", "To the east is a closed door.",
+        return new String[]{"To the north, the hallway continues.", "To the east is a closed door.",
                 "To the south is a closed door.", "To the west is an open door."};
     }
 
@@ -35,4 +34,5 @@ public class HallSouth extends Room {
     public RoomName goWest() {
         return RoomName.KITCHEN_SOUTH;
     }
+
 }

@@ -1,14 +1,20 @@
 package smithies.textadventure.session;
 
+import smithies.textadventure.command.Adverb;
+import smithies.textadventure.command.Noun;
 import smithies.textadventure.item.Inventory;
 import smithies.textadventure.item.Item;
 import smithies.textadventure.item.ItemName;
 import smithies.textadventure.rooms.Room;
 import smithies.textadventure.rooms.RoomName;
+import smithies.textadventure.ui.DisplayConsoleOutput;
+import smithies.textadventure.ui.DisplayOutput;
 
 import java.util.Optional;
 
 public class Player {
+
+    private DisplayOutput output = new DisplayConsoleOutput();
 
     private Room currentRoom;
     private Inventory inventory = new Inventory(1);
@@ -63,11 +69,36 @@ public class Player {
         });
     }
 
+    public void dropItem(Noun itemName) {
+        inventory.removeItem(itemName).ifPresent(item -> {
+            currentRoom.addItem(item, onFloorDescription(item));
+        });
+
+    }
+
     public void setCurrentRoom(Room currentRoom) {
         this.currentRoom = currentRoom;
     }
 
     public Room getCurrentRoom() {
         return currentRoom;
+    }
+
+    public void search(Noun name, Adverb adverb) {
+        Optional<Item> optionalItem = getCurrentRoom().search(name, adverb);
+        if (optionalItem.isPresent()) {
+            Item item = optionalItem.get();
+            if (!isInventoryFull()) {
+                inventory.addItem(item);
+            } else {
+                currentRoom.addItem(item, onFloorDescription(item));
+            }
+        } else {
+            output.displayTextLine("You can't find anything of interest.");
+        }
+    }
+
+    private String onFloorDescription(Item item) {
+        return "On the floor is a " + item.getName();
     }
 }

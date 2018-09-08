@@ -1,12 +1,11 @@
 package smithies.textadventure.item;
 
+import smithies.textadventure.command.Noun;
+
 public class TennisBall extends DogToy {
 
-    private ItemName name = ItemName.TENNIS_BALL;
-
-    @Override
-    public ItemName getName() {
-        return name;
+    public TennisBall() {
+        super(Noun.TENNIS_BALL);
     }
 
     @Override

@@ -1,10 +1,13 @@
 package smithies.textadventure.item;
 
-import smithies.textadventure.rooms.RoomName;
+import smithies.textadventure.command.Nameable;
+import smithies.textadventure.command.Noun;
 
-public abstract class Item {
+public abstract class Item extends Nameable {
 
-    public abstract ItemName getName();
+    public Item(Noun name) {
+        super(name);
+    }
 
     public abstract String getDescription();
 
