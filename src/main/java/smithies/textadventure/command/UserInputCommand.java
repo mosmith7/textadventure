@@ -48,8 +48,6 @@ public class UserInputCommand {
             return GameCommand.WEST;
         } else if (Verb.WAIT.equals(verb)) {
             return GameCommand.WAIT;
-        } else if (Verb.LOOK.equals(verb)) {
-            return GameCommand.LOOK;
         } else if (Verb.EXAMINE.equals(verb)) {
             if (noun != null) {
                 GameCommand command = GameCommand.EXAMINE;
@@ -70,6 +68,8 @@ public class UserInputCommand {
             }
         } else if (Verb.DROP.equals(verb)) {
             return GameCommand.DROP;
+        } else if (Verb.SEARCH.equals(verb) && adverb == null && noun == null) {
+            return GameCommand.LOOK;
         } else if (Verb.SEARCH.equals(verb) && adverb == null) {
             // Randomly pick a type of search technique
             if (noun != null) {

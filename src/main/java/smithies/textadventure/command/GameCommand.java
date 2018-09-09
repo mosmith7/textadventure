@@ -8,7 +8,7 @@ public enum GameCommand {
     WEST(Verb.GO, Adverb.WEST),
 
     WAIT(Verb.WAIT, null),
-    LOOK(Verb.GO, null),
+    LOOK(Verb.SEARCH, null),
 
     EXAMINE(Verb.EXAMINE, null),
     INVENTORY(Verb.INVENTORY, null),

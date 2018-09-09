@@ -8,14 +8,13 @@ public enum Verb {
     GO("move", "go", "walk"),
 
     WAIT("wait"),
-    LOOK("look"),
 
     EXAMINE("examine"),
     INVENTORY("inventory"),
     TAKE("take", "grab", "pick up"),
     DROP("drop", "release"),
 
-    SEARCH("search"),
+    SEARCH("search", "look"),
 
     BARK("woof", "bark"),
     WHINE("whine", "squeek"),
