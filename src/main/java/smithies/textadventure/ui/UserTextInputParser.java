@@ -6,6 +6,8 @@ import java.util.Optional;
 
 public class UserTextInputParser {
 
+    private CommandCache commandCache = new CommandCache();
+
     public UserInputCommand parseString(String rawInput) {
 
         String input = convertRawInput(rawInput);
@@ -15,18 +17,20 @@ public class UserTextInputParser {
         Optional<Noun> optionalNoun = findNoun(input);
 
         if (optionalVerb.isPresent() && optionalAdverb.isPresent() && optionalNoun.isPresent()) {
-            return new UserInputCommand(optionalVerb.get(), optionalAdverb.get(), optionalNoun.get());
+            return new UserInputCommand(commandCache, optionalVerb.get(), optionalAdverb.get(), optionalNoun.get());
         } else if (optionalVerb.isPresent() && optionalAdverb.isPresent()) {
-            return new UserInputCommand(optionalVerb.get(), optionalAdverb.get());
+            return new UserInputCommand(commandCache, optionalVerb.get(), optionalAdverb.get());
         } else if (optionalVerb.isPresent() && optionalNoun.isPresent()) {
-            return new UserInputCommand(optionalVerb.get(), optionalNoun.get());
+            return new UserInputCommand(commandCache, optionalVerb.get(), optionalNoun.get());
         } else if (optionalVerb.isPresent()) {
-            return new UserInputCommand(optionalVerb.get());
+            return new UserInputCommand(commandCache, optionalVerb.get());
         } else if (optionalAdverb.isPresent()) {
-            return new UserInputCommand(optionalAdverb.get());
+            return new UserInputCommand(commandCache, optionalAdverb.get());
+        } else if (optionalNoun.isPresent()) {
+            return new UserInputCommand(commandCache, optionalNoun.get());
         }
 
-        return new UserInputCommand(Verb.FAILED_TO_PARSE);
+        return UserInputCommand.empty(commandCache);
     }
 
     private String convertRawInput(String rawInput) {

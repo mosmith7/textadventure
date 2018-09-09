@@ -1,6 +1,7 @@
 package smithies.textadventure.session;
 
 import smithies.textadventure.command.Adverb;
+import smithies.textadventure.command.CommandCache;
 import smithies.textadventure.command.CommandHandler;
 import smithies.textadventure.command.UserInputCommand;
 import smithies.textadventure.item.Item;
@@ -21,9 +22,13 @@ public class SessionManager {
     private UserTextInputParser inputParser = new UserTextInputParser();
     private CommandHandler commandHandler = new CommandHandler();
     private DisplayOutput output = new DisplayConsoleOutput();
+    private CommandCache commandCache = new CommandCache();
 
     private AllRooms allRooms;
     private Player player;
+
+    public SessionManager() {
+    }
 
     public void startGame() {
         displayStartingMessage();
@@ -35,8 +40,10 @@ public class SessionManager {
         player.enterRoom();
         while(true) {
             String input = inputRetriever.getLine();
-            UserInputCommand command = inputParser.parseString(input);
-            commandHandler.processCommand(player, allRooms, command.toGameCommand());
+            UserInputCommand userCommand = inputParser.parseString(input);
+            userCommand.toGameCommand().ifPresent(gameCommand -> {
+                commandHandler.processCommand(player, allRooms, gameCommand);
+            });
         }
     }
 

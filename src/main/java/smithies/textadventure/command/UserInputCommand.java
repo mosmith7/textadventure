@@ -3,124 +3,159 @@ package smithies.textadventure.command;
 import smithies.textadventure.ui.DisplayConsoleOutput;
 import smithies.textadventure.ui.DisplayOutput;
 
+import java.util.Optional;
 import java.util.Random;
 
 public class UserInputCommand {
 
-    private DisplayOutput output = new DisplayConsoleOutput();
+    private CommandCache commandCache;
 
     private Verb verb;
     private Adverb adverb;
     private Noun noun;
 
-    public UserInputCommand(Verb verb, Adverb adverb, Noun noun) {
+    public UserInputCommand(CommandCache commandCache, Verb verb, Adverb adverb, Noun noun) {
+        this.commandCache = commandCache;
         this.verb = verb;
         this.adverb = adverb;
         this.noun = noun;
     }
 
-    public UserInputCommand(Verb verb, Adverb adverb) {
-        this(verb, adverb, null);
+    public UserInputCommand(CommandCache commandCache, Verb verb, Adverb adverb) {
+        this(commandCache, verb, adverb, null);
     }
 
-    public UserInputCommand(Verb verb, Noun noun) {
-        this(verb, null, noun);
+    public UserInputCommand(CommandCache commandCache, Verb verb, Noun noun) {
+        this(commandCache, verb, null, noun);
     }
 
-    public UserInputCommand(Verb verb) {
-        this(verb, null, null);
+    public UserInputCommand(CommandCache commandCache, Verb verb) {
+        this(commandCache, verb, null, null);
     }
 
-    public UserInputCommand(Adverb adverb) {
-        this(null, adverb, null);
+    public UserInputCommand(CommandCache commandCache, Adverb adverb) {
+        this(commandCache, null, adverb, null);
     }
 
-    public GameCommand toGameCommand() {
+    public UserInputCommand(CommandCache commandCache, Noun noun) {
+        this(commandCache, null, null, noun);
+    }
+
+    public static UserInputCommand empty(CommandCache commandCache) {
+        return new UserInputCommand(commandCache);
+    }
+
+    private UserInputCommand(CommandCache commandCache) {
+        this.commandCache = commandCache;
+
+    }
+
+    public Optional<GameCommand> toGameCommand() {
+        // Get any cached commands from when a question was asked
+        if (verb == null && adverb == null) {
+            Optional<Verb> cachedVerb = commandCache.getCachedVerb();
+            Optional<Adverb> cachedAdverb = commandCache.getCachedAdverb();
+            if (cachedVerb.isPresent() && cachedAdverb.isPresent()) {
+                verb = cachedVerb.get();
+                adverb = cachedAdverb.get();
+            }
+        } else if (verb == null) {
+            commandCache.getCachedVerb().ifPresent(v -> verb = v);
+        }
+
+        boolean questionReturned = false;
+        GameCommand command = null;
+
         if (Verb.GO.equals(verb) && adverb == null) {
-            output.displayTextLine("Go where?");
+            commandCache.displayQuestionAndRetainVerb("Go where?", verb);
+            questionReturned = true;
         } else if ((verb == null || Verb.GO.equals(verb)) && Adverb.NORTH.equals(adverb)) {
-            return GameCommand.NORTH;
+            command = GameCommand.NORTH;
         } else if ((verb == null || Verb.GO.equals(verb)) && Adverb.SOUTH.equals(adverb)) {
-            return GameCommand.SOUTH;
+            command = GameCommand.SOUTH;
         } else if ((verb == null || Verb.GO.equals(verb)) && Adverb.EAST.equals(adverb)) {
-            return GameCommand.EAST;
+            command = GameCommand.EAST;
         } else if ((verb == null || Verb.GO.equals(verb)) && Adverb.WEST.equals(adverb)) {
-            return GameCommand.WEST;
+            command = GameCommand.WEST;
         } else if (Verb.WAIT.equals(verb)) {
-            return GameCommand.WAIT;
+            command = GameCommand.WAIT;
         } else if (Verb.EXAMINE.equals(verb)) {
             if (noun != null) {
-                GameCommand command = GameCommand.EXAMINE;
+                command = GameCommand.EXAMINE;
                 command.setNoun(noun);
-                return command;
             } else {
-                output.displayTextLine("What would you like to examine?");
+                commandCache.displayQuestionAndRetainVerb("What would you like to examine?", verb);
+                questionReturned = true;
             }
         } else if (Verb.INVENTORY.equals(verb)) {
-            return GameCommand.INVENTORY;
+            command = GameCommand.INVENTORY;
         } else if (Verb.TAKE.equals(verb)) {
             if (noun != null) {
-                GameCommand command = GameCommand.TAKE;
+                command = GameCommand.TAKE;
                 command.setNoun(noun);
-                return command;
             } else {
-                output.displayTextLine("What would you like to take?");
+                commandCache.displayQuestionAndRetainVerb("What would you like to take?", verb);
+                questionReturned = true;
             }
         } else if (Verb.DROP.equals(verb)) {
-            return GameCommand.DROP;
+            command = GameCommand.DROP;
         } else if (Verb.SEARCH.equals(verb) && adverb == null && noun == null) {
-            return GameCommand.LOOK;
+            command = GameCommand.LOOK;
         } else if (Verb.SEARCH.equals(verb) && adverb == null) {
             // Randomly pick a type of search technique
             if (noun != null) {
-                GameCommand command = chooseRandomSearchCommand();
+                command = chooseRandomSearchCommand();
                 command.setNoun(noun);
-                return command;
-            } else {
-                output.displayTextLine("What would you like to search?");
             }
         } else if (Verb.SEARCH.equals(verb) && Adverb.UNDER.equals(adverb)) {
             if (noun != null) {
-                GameCommand command = GameCommand.SEARCH_UNDER;
+                command = GameCommand.SEARCH_UNDER;
                 command.setNoun(noun);
-                return command;
             } else {
-                output.displayTextLine("What would you like to search under?");
+                commandCache.displayQuestionAndRetainVerbAndAdverb("What would you like to search under?", verb, adverb);
+                questionReturned = true;
             }
         } else if (Verb.SEARCH.equals(verb) && Adverb.IN.equals(adverb)) {
             if (noun != null) {
-                GameCommand command = GameCommand.SEARCH_IN;
+                command = GameCommand.SEARCH_IN;
                 command.setNoun(noun);
-                return command;
             } else {
-                output.displayTextLine("What would you like to search in?");
+                commandCache.displayQuestionAndRetainVerbAndAdverb("What would you like to search in?", verb, adverb);
+                questionReturned = true;
             }
         } else if (Verb.SEARCH.equals(verb) && Adverb.ON.equals(adverb)) {
             if (noun != null) {
-                GameCommand command = GameCommand.SEARCH_ON;
+                command = GameCommand.SEARCH_ON;
                 command.setNoun(noun);
-                return command;
             } else {
-                output.displayTextLine("What would you like to search on?");
+                commandCache.displayQuestionAndRetainVerbAndAdverb("What would you like to search on?", verb, adverb);
+                questionReturned = true;
             }
         } else if (Verb.BARK.equals(verb)) {
-            return GameCommand.BARK;
+            command = GameCommand.BARK;
         }  else if (Verb.WHINE.equals(verb)) {
-            return GameCommand.WHINE;
+            command = GameCommand.WHINE;
         }  else if (Verb.GROWL.equals(verb)) {
-            return GameCommand.GROWL;
+            command = GameCommand.GROWL;
         }  else if (Verb.SCRATCH.equals(verb)) {
             GameCommand scratch = GameCommand.SCRATCH;
             if (noun != null) {
                 scratch.setNoun(noun);
             }
-            return scratch;
+            command = scratch;
         }  else if (Verb.EXIT.equals(verb)) {
-            return GameCommand.EXIT;
+            command = GameCommand.EXIT;
         }  else if (Verb.FAILED_TO_PARSE.equals(verb)) {
-            return GameCommand.FAILED_TO_PARSE;
+            command = GameCommand.FAILED_TO_PARSE;
+        } else {
+            command = GameCommand.FAILED_TO_PARSE;
         }
-        return GameCommand.FAILED_TO_PARSE;
+
+        if (!questionReturned) {
+            commandCache.clearCache();
+        }
+
+        return Optional.ofNullable(command);
     }
 
     private GameCommand chooseRandomSearchCommand() {

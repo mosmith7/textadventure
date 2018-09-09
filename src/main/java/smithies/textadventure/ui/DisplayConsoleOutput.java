@@ -5,6 +5,7 @@ import java.util.Random;
 public class DisplayConsoleOutput implements DisplayOutput {
 
     private Random random = new Random();
+
     @Override
     public void displayTextLine(String line) {
         System.out.println(line);
