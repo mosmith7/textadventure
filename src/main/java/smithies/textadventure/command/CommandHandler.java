@@ -34,15 +34,29 @@ public class CommandHandler {
                 handleRoomName(player, allRooms, player.goWest());
                 break;
             case TAKE:
-                // TODO: handle more items
-                if (player.canTakeItem(ItemName.TENNIS_BALL)) {
-                    player.takeItem(ItemName.TENNIS_BALL);
+                if (player.canTakeItem(command.getNoun())) {
+                    player.takeItem(command.getNoun());
                     output.displayTextLine("Taken.");
                 }
                 break;
             case DROP:
-                // TODO:
-                output.displayTextLine("Dropped.");
+                if (player.isInventoryEmpty()) {
+                    output.displayTextLine("You have nothing to drop");
+                } else {
+                    if (command.getNoun() != null) {
+                        player.inventoryPeek().ifPresent(itemName -> {
+                            if (itemName.equals(command.getNoun())) {
+                                player.dropItem(itemName);
+                                output.displayTextLine("Dropped.");
+                            }
+                        });
+                    } else {
+                        player.inventoryPeek().ifPresent(itemName -> {
+                            player.dropItem(itemName);
+                            output.displayTextLine("Dropped " + itemName.name());
+                        });
+                    }
+                }
                 break;
             case INVENTORY:
                 player.viewInventory();
@@ -56,8 +70,10 @@ public class CommandHandler {
             case SEARCH_ON:
                 player.search(command.getNoun(), command.getAdverb());
                 break;
+            case FAILED_TO_PARSE:
+                output.displayTextLine("I did not understand your command");
+                break;
             default:
-                output.displayTextLine("I did not understand your command.");
                 break;
 
         }

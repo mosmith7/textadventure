@@ -61,7 +61,13 @@ public class UserInputCommand {
         } else if (Verb.INVENTORY.equals(verb)) {
             return GameCommand.INVENTORY;
         } else if (Verb.TAKE.equals(verb)) {
-            return GameCommand.TAKE;
+            if (noun != null) {
+                GameCommand command = GameCommand.TAKE;
+                command.setNoun(noun);
+                return command;
+            } else {
+                output.displayTextLine("What would you like to take?");
+            }
         } else if (Verb.DROP.equals(verb)) {
             return GameCommand.DROP;
         } else if (Verb.SEARCH.equals(verb) && adverb == null) {
@@ -99,6 +105,8 @@ public class UserInputCommand {
             }
         } else if (Verb.EXIT.equals(verb)) {
             return GameCommand.EXIT;
+        } else if (Verb.FAILED_TO_PARSE.equals(verb)) {
+            return GameCommand.FAILED_TO_PARSE;
         }
         return GameCommand.FAILED_TO_PARSE;
     }

@@ -7,14 +7,10 @@ import smithies.textadventure.item.Item;
 import smithies.textadventure.item.ItemName;
 import smithies.textadventure.rooms.Room;
 import smithies.textadventure.rooms.RoomName;
-import smithies.textadventure.ui.DisplayConsoleOutput;
-import smithies.textadventure.ui.DisplayOutput;
 
 import java.util.Optional;
 
 public class Player {
-
-    private DisplayOutput output = new DisplayConsoleOutput();
 
     private Room currentRoom;
     private Inventory inventory = new Inventory(1);
@@ -29,6 +25,14 @@ public class Player {
 
     public boolean isInventoryFull() {
         return inventory.isFull();
+    }
+
+    public boolean isInventoryEmpty() {
+        return inventory.isEmpty();
+    }
+
+    public Optional<Noun> inventoryPeek() {
+        return inventory.peek();
     }
 
     public void enterRoom() {
@@ -55,11 +59,11 @@ public class Player {
         currentRoom.displayFullDescription();
     }
 
-    public boolean canTakeItem(ItemName itemName) {
+    public boolean canTakeItem(Noun itemName) {
         return currentRoom.hasItem(itemName);
     }
 
-    public void takeItem(ItemName itemName) {
+    public void takeItem(Noun itemName) {
         currentRoom.takeItem(this, itemName).ifPresent(item -> {
             if (inventory.isFull()) {
                 currentRoom.addItem(item, "");
@@ -93,8 +97,6 @@ public class Player {
             } else {
                 currentRoom.addItem(item, onFloorDescription(item));
             }
-        } else {
-            output.displayTextLine("You can't find anything of interest.");
         }
     }
 

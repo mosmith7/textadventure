@@ -65,11 +65,11 @@ public abstract class Room {
         itemPositionDescription.put(item, positionDescription);
     }
 
-    public boolean hasItem(ItemName itemname) {
-        return items.stream().map(Item::getName).collect(Collectors.toList()).contains(itemname);
+    public boolean hasItem(Noun itemName) {
+        return items.stream().map(Item::getName).collect(Collectors.toList()).contains(itemName);
     }
 
-    public Optional<Item> takeItem(Player player, ItemName name) {
+    public Optional<Item> takeItem(Player player, Noun name) {
         if (!player.isInventoryFull()) {
             Optional<Item> item = items.stream().filter(i -> i.getName().equals(name)).findFirst();
             item.ifPresent(i -> {

@@ -5,17 +5,19 @@ import java.util.List;
 
 public enum Verb {
 
-    GO("move", "go"),
+    GO("move", "go", "walk"),
 
     WAIT("wait"),
     LOOK("look"),
 
     EXAMINE("examine"),
     INVENTORY("inventory"),
-    TAKE("take", "grab"),
-    DROP("drop"),
+    TAKE("take", "grab", "pick up"),
+    DROP("drop", "release"),
 
     SEARCH("search"),
+
+    FAILED_TO_PARSE,
 
     EXIT("exit", "quit"),
 

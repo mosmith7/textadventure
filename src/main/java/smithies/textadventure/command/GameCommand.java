@@ -10,7 +10,7 @@ public enum GameCommand {
     WAIT(Verb.WAIT, null),
     LOOK(Verb.GO, null),
 
-    EXAMINE(Verb.GO, null),
+    EXAMINE(Verb.EXAMINE, null),
     INVENTORY(Verb.INVENTORY, null),
     TAKE(Verb.TAKE, null),
     DROP(Verb.DROP, null),

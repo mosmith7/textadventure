@@ -23,7 +23,7 @@ public class DogBed extends Searchable {
                     output.displayTextLines("You get your entire head under the soft bed.",
                             "Yes! That's it! You grab the " + optionalItem.get().getName());
                 } else {
-                    output.displayTextLines("You search under the shelf.");
+                    output.displayTextLines("You search under the shelf. Nothing.");
                 }
                 break;
             case IN:
@@ -31,7 +31,8 @@ public class DogBed extends Searchable {
                     output.displayTextLines("You rip open the bed with your teeth, stuff your head in it and have a good rummage.",
                             "Yes! That's it! You grab the " + optionalItem.get().getName());
                 } else {
-                    output.displayTextLine("You rip open the bed with your teeth, stuff your head in it and have a good rummage.");
+                    output.displayTextLines("You rip open the bed with your teeth, stuff your head in it and have a good rummage.",
+                            "Unfortunately you don't find anything.");
                 }
                 break;
             case ON:
@@ -39,7 +40,7 @@ public class DogBed extends Searchable {
                     output.displayTextLines("You examine the bed more closely.",
                             "Yes! That's it! You grab the " + optionalItem.get().getName());
                 } else {
-                    output.displayTextLines("You search on the bed.");
+                    output.displayTextLines("You search on the bed. Nothing.");
                 }
                 break;
             default:

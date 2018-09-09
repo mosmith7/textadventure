@@ -23,6 +23,10 @@ public class Inventory {
         return items.size() >= limit;
     }
 
+    public boolean isEmpty() {
+        return items.size() == 0;
+    }
+
     public void view() {
         output.displayTextLine("Inventory: ");
         items.forEach(item -> {
@@ -39,6 +43,13 @@ public class Inventory {
         if (optionalItem.isPresent()) {
             items.remove(optionalItem.get());
             return optionalItem;
+        }
+        return Optional.empty();
+    }
+
+    public Optional<Noun> peek() {
+        if (!isEmpty()) {
+            return Optional.of(items.get(0).getName());
         }
         return Optional.empty();
     }

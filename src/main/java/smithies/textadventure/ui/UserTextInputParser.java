@@ -6,33 +6,27 @@ import java.util.Optional;
 
 public class UserTextInputParser {
 
-    private DisplayOutput output = new DisplayConsoleOutput();
-
     public UserInputCommand parseString(String rawInput) {
 
         String input = convertRawInput(rawInput);
 
-        try {
-            Optional<Verb> optionalVerb = findVerb(input);
-            Optional<Adverb> optionalAdverb = findAdverb(input);
-            Optional<Noun> optionalNoun = findNoun(input);
+        Optional<Verb> optionalVerb = findVerb(input);
+        Optional<Adverb> optionalAdverb = findAdverb(input);
+        Optional<Noun> optionalNoun = findNoun(input);
 
-            if (optionalVerb.isPresent() && optionalAdverb.isPresent() && optionalNoun.isPresent()) {
-                return new UserInputCommand(optionalVerb.get(), optionalAdverb.get(), optionalNoun.get());
-            } else if (optionalVerb.isPresent() && optionalAdverb.isPresent()) {
-                return new UserInputCommand(optionalVerb.get(), optionalAdverb.get());
-            } else if (optionalVerb.isPresent() && optionalNoun.isPresent()) {
-                return new UserInputCommand(optionalVerb.get(), optionalNoun.get());
-            } else if (optionalVerb.isPresent()) {
-                return new UserInputCommand(optionalVerb.get());
-            } else if (optionalAdverb.isPresent()) {
-                return new UserInputCommand(optionalAdverb.get());
-            }
-        } catch (Exception e) {
-            System.out.println("Command not recognised");
+        if (optionalVerb.isPresent() && optionalAdverb.isPresent() && optionalNoun.isPresent()) {
+            return new UserInputCommand(optionalVerb.get(), optionalAdverb.get(), optionalNoun.get());
+        } else if (optionalVerb.isPresent() && optionalAdverb.isPresent()) {
+            return new UserInputCommand(optionalVerb.get(), optionalAdverb.get());
+        } else if (optionalVerb.isPresent() && optionalNoun.isPresent()) {
+            return new UserInputCommand(optionalVerb.get(), optionalNoun.get());
+        } else if (optionalVerb.isPresent()) {
+            return new UserInputCommand(optionalVerb.get());
+        } else if (optionalAdverb.isPresent()) {
+            return new UserInputCommand(optionalAdverb.get());
         }
 
-        return new UserInputCommand(Verb.WAIT);
+        return new UserInputCommand(Verb.FAILED_TO_PARSE);
     }
 
     private String convertRawInput(String rawInput) {

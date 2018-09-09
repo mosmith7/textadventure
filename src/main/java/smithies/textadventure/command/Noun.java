@@ -5,10 +5,10 @@ import java.util.List;
 
 public enum Noun {
 
-    TENNIS_BALL("ball", "tennis ball"),
+    TENNIS_BALL("tennis ball", "ball"),
 
-    WOODEN_SHELF("shelf", "wooden shelf"),
-    DOG_BED("bed", "dog bed"),
+    WOODEN_SHELF("wooden shelf", "shelf"),
+    DOG_BED("dog bed", "bed"),
 
     ;
 
