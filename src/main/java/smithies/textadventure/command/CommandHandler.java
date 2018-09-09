@@ -35,7 +35,7 @@ public class CommandHandler {
                 break;
             case TAKE:
                 if (player.canTakeItem(command.getNoun())) {
-                    player.takeItem(command.getNoun());
+                    player.takeItem(command.getAndResetNoun());
                     output.displayTextLine("Taken.");
                 }
                 break;
@@ -45,7 +45,7 @@ public class CommandHandler {
                 } else {
                     if (command.getNoun() != null) {
                         player.inventoryPeek().ifPresent(itemName -> {
-                            if (itemName.equals(command.getNoun())) {
+                            if (itemName.equals(command.getAndResetNoun())) {
                                 player.dropItem(itemName);
                                 output.displayTextLine("Dropped.");
                             }
@@ -62,13 +62,29 @@ public class CommandHandler {
                 player.viewInventory();
                 break;
             case SEARCH_UNDER:
-                player.search(command.getNoun(), command.getAdverb());
+                player.search(command.getAndResetNoun(), command.getAdverb());
                 break;
             case SEARCH_IN:
-                player.search(command.getNoun(), command.getAdverb());
+                player.search(command.getAndResetNoun(), command.getAdverb());
                 break;
             case SEARCH_ON:
-                player.search(command.getNoun(), command.getAdverb());
+                player.search(command.getAndResetNoun(), command.getAdverb());
+                break;
+            case BARK:
+                output.displayTextLine("You bark");
+                break;
+            case WHINE:
+                output.displayTextLine("You whine and squeek, trying to get attention");
+                break;
+            case GROWL:
+                output.displayTextLine("You growl menacingly");
+                break;
+            case SCRATCH:
+                if (command.getNoun() != null) {
+                    output.displayTextLine("You scratch the " + command.getAndResetNoun().toString());
+                } else {
+                    output.displayTextLine("You scratch the floor");
+                }
                 break;
             case FAILED_TO_PARSE:
                 output.displayTextLine("I did not understand your command");

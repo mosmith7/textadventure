@@ -17,6 +17,11 @@ public enum Verb {
 
     SEARCH("search"),
 
+    BARK("woof", "bark"),
+    WHINE("whine", "squeek"),
+    GROWL("growl", "gr", "grr", "grrr", "grrrr"),
+    SCRATCH("scratch"),
+
     FAILED_TO_PARSE,
 
     EXIT("exit", "quit"),

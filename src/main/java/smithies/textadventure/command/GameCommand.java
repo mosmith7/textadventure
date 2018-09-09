@@ -19,6 +19,11 @@ public enum GameCommand {
     SEARCH_IN(Verb.SEARCH, Adverb.IN),
     SEARCH_ON(Verb.SEARCH, Adverb.ON),
 
+    BARK(Verb.BARK, null),
+    WHINE(Verb.WHINE, null),
+    GROWL(Verb.GROWL, null),
+    SCRATCH(Verb.SCRATCH, null),
+
     EXIT(Verb.EXIT, null),
 
     FAILED_TO_PARSE(null, null),
@@ -38,6 +43,12 @@ public enum GameCommand {
     }
 
     public Noun getNoun() {
+        return noun;
+    }
+
+    public Noun getAndResetNoun() {
+        Noun noun = this.noun;
+        this.noun = null;
         return noun;
     }
 

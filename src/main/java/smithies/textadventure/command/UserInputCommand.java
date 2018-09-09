@@ -103,9 +103,21 @@ public class UserInputCommand {
             } else {
                 output.displayTextLine("What would you like to search on?");
             }
-        } else if (Verb.EXIT.equals(verb)) {
+        } else if (Verb.BARK.equals(verb)) {
+            return GameCommand.BARK;
+        }  else if (Verb.WHINE.equals(verb)) {
+            return GameCommand.WHINE;
+        }  else if (Verb.GROWL.equals(verb)) {
+            return GameCommand.GROWL;
+        }  else if (Verb.SCRATCH.equals(verb)) {
+            GameCommand scratch = GameCommand.SCRATCH;
+            if (noun != null) {
+                scratch.setNoun(noun);
+            }
+            return scratch;
+        }  else if (Verb.EXIT.equals(verb)) {
             return GameCommand.EXIT;
-        } else if (Verb.FAILED_TO_PARSE.equals(verb)) {
+        }  else if (Verb.FAILED_TO_PARSE.equals(verb)) {
             return GameCommand.FAILED_TO_PARSE;
         }
         return GameCommand.FAILED_TO_PARSE;
