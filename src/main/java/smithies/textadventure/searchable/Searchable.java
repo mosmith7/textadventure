@@ -38,4 +38,8 @@ public abstract class Searchable extends Nameable {
         return positionDescription;
     }
 
+    public void goTo() {
+        output.displayTextLine("You walk over to the " + getName());
+    }
+
 }

@@ -50,4 +50,9 @@ public class DogBed extends Searchable {
         return optionalItem;
     }
 
+    @Override
+    public void goTo() {
+        output.displayTextLine("You trot over to your bed and curl up in a ball on it.");
+    }
+
 }

@@ -2,6 +2,8 @@ package smithies.textadventure.command;
 
 public enum GameCommand {
 
+    GO_TO_NOUN(Verb.GO, null),
+
     NORTH(Verb.GO, Adverb.NORTH),
     SOUTH(Verb.GO, Adverb.SOUTH),
     EAST(Verb.GO, Adverb.EAST),

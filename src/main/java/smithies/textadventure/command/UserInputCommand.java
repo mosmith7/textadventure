@@ -1,8 +1,5 @@
 package smithies.textadventure.command;
 
-import smithies.textadventure.ui.DisplayConsoleOutput;
-import smithies.textadventure.ui.DisplayOutput;
-
 import java.util.Optional;
 import java.util.Random;
 
@@ -67,8 +64,13 @@ public class UserInputCommand {
         GameCommand command = null;
 
         if (Verb.GO.equals(verb) && adverb == null) {
-            commandCache.displayQuestionAndRetainVerb("Go where?", verb);
-            questionReturned = true;
+            if (noun != null) {
+                command = GameCommand.GO_TO_NOUN;
+                command.setNoun(noun);
+            } else {
+                commandCache.displayQuestionAndRetainVerb("Go where?", verb);
+                questionReturned = true;
+            }
         } else if ((verb == null || Verb.GO.equals(verb)) && Adverb.NORTH.equals(adverb)) {
             command = GameCommand.NORTH;
         } else if ((verb == null || Verb.GO.equals(verb)) && Adverb.SOUTH.equals(adverb)) {

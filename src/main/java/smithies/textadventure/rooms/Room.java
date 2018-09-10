@@ -3,7 +3,6 @@ package smithies.textadventure.rooms;
 import smithies.textadventure.command.Adverb;
 import smithies.textadventure.command.Noun;
 import smithies.textadventure.item.Item;
-import smithies.textadventure.item.ItemName;
 import smithies.textadventure.searchable.Searchable;
 import smithies.textadventure.session.Player;
 import smithies.textadventure.ui.DisplayConsoleOutput;
@@ -91,6 +90,16 @@ public abstract class Room {
         searchables.add(searchable);
     }
 
+    public boolean containsSearchable(Noun searchableName) {
+        return getSearchable(searchableName).isPresent();
+    }
+
+    public Optional<Searchable> getSearchable(Noun searchableName) {
+        return searchables.stream()
+                .filter(s -> searchableName.equals(s.getName()))
+                .findFirst();
+    }
+
     public Optional<Item> search(Noun name, Adverb adverb) {
         Optional<Item> item = Optional.empty();
         Optional<Searchable> searchable = searchables.stream().filter(s -> name.equals(s.getName())).findFirst();
@@ -98,5 +107,9 @@ public abstract class Room {
             item = searchable.get().tryAndSearch(adverb);
         }
         return item;
+    }
+
+    public void goToSearchable(Noun searchableName) {
+        getSearchable(searchableName).ifPresent(Searchable::goTo);
     }
 }

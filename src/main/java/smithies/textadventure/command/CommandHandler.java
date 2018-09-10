@@ -1,7 +1,9 @@
 package smithies.textadventure.command;
 
 import smithies.textadventure.item.ItemName;
+import smithies.textadventure.rooms.Room;
 import smithies.textadventure.rooms.RoomName;
+import smithies.textadventure.searchable.Searchable;
 import smithies.textadventure.session.AllRooms;
 import smithies.textadventure.session.Player;
 import smithies.textadventure.ui.DisplayConsoleOutput;
@@ -20,6 +22,14 @@ public class CommandHandler {
                 break;
             case LOOK:
                 player.look();
+                break;
+            case GO_TO_NOUN:
+                Room currentRoom = player.getCurrentRoom();
+                if (currentRoom.containsSearchable(command.getNoun())) {
+                    currentRoom.goToSearchable(command.getNoun());
+                } else {
+                    output.displayTextLine("Are you sure " + command.getNoun() + " is in the same room as you?");
+                }
                 break;
             case NORTH:
                 handleRoomName(player, allRooms, player.goNorth());
