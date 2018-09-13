@@ -2,11 +2,15 @@ package smithies.textadventure.session;
 
 import smithies.textadventure.command.Adverb;
 import smithies.textadventure.command.Noun;
+import smithies.textadventure.interactable.climbable.ClimbInteraction;
+import smithies.textadventure.interactable.climbable.ClimbResult;
 import smithies.textadventure.item.Inventory;
 import smithies.textadventure.item.Item;
-import smithies.textadventure.item.ItemName;
 import smithies.textadventure.rooms.Room;
 import smithies.textadventure.rooms.RoomName;
+import smithies.textadventure.interactable.searchable.Searchable;
+import smithies.textadventure.ui.DisplayConsoleOutput;
+import smithies.textadventure.ui.DisplayOutput;
 
 import java.util.Optional;
 
@@ -14,6 +18,8 @@ public class Player {
 
     private Room currentRoom;
     private Inventory inventory = new Inventory(1);
+    private ClimbInteraction climbInteraction = new ClimbInteraction();
+    private DisplayOutput output = new DisplayConsoleOutput();
 
     public Player(Room currentRoom) {
         this.currentRoom = currentRoom;
@@ -40,23 +46,28 @@ public class Player {
     }
 
     public RoomName goNorth() {
+        climbDown();
         return this.currentRoom.goNorth();
     }
 
     public RoomName goSouth() {
+        climbDown();
         return this.currentRoom.goSouth();
     }
 
     public RoomName goEast() {
+        climbDown();
         return this.currentRoom.goEast();
     }
 
     public RoomName goWest() {
+        climbDown();
         return this.currentRoom.goWest();
     }
 
     public void look() {
         currentRoom.displayFullDescription();
+        displayOnClimbableDescription();
     }
 
     public boolean canTakeItem(Noun itemName) {
@@ -97,6 +108,51 @@ public class Player {
             } else {
                 currentRoom.addItem(item, onFloorDescription(item));
             }
+        }
+    }
+
+    public void climbUp(Noun name) {
+        if (this.climbInteraction.inOnAnyClimbable()) {
+            output.displayTextLine("You can't climb again, you are already on a " + this.climbInteraction.getClimbableName());
+            return;
+        }
+
+        Optional<Searchable> optionalSearchable = getCurrentRoom().getSearchable(name);
+        if (optionalSearchable.isPresent()) {
+            Searchable searchable = optionalSearchable.get();
+            ClimbResult climbResult = searchable.attemptClimb();
+            if (climbResult.isSuccess()) {
+                this.climbInteraction.climbUp(searchable);
+            } else {
+                this.climbInteraction.climbDown();
+            }
+            output.displayTextLine(climbResult.getResultMessage());
+        } else {
+            output.displayTextLine("The " + name + " isn't in this room");
+        }
+    }
+
+    public void climbDown(Noun name) {
+        if (!this.climbInteraction.inOnClimbable(name)) {
+            output.displayTextLine("You aren't on the " + name + ". So how could you climb down from it?");
+            return;
+        }
+
+        climbDown();
+    }
+
+    public void climbDown() {
+        if (this.climbInteraction.inOnAnyClimbable()) {
+            this.climbInteraction.climbDown();
+            output.displayTextLine("You climb down");
+        } else {
+            output.displayTextLine("You aren't on anything to climb down from");
+        }
+    }
+
+    private void displayOnClimbableDescription() {
+        if (this.climbInteraction.inOnAnyClimbable()) {
+            output.displayTextLine("You are on top of a " + this.climbInteraction.getClimbableName());
         }
     }
 

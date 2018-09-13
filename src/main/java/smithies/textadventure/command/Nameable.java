@@ -1,6 +1,6 @@
 package smithies.textadventure.command;
 
-public abstract class Nameable {
+public abstract class Nameable implements Named {
 
     private Noun name;
 

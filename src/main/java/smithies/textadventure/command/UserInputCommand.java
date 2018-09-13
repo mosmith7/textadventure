@@ -145,7 +145,28 @@ public class UserInputCommand {
                 scratch.setNoun(noun);
             }
             command = scratch;
-        }  else if (Verb.EXIT.equals(verb)) {
+        } else if (Verb.CLIMB.equals(verb)) {
+            if (noun != null) {
+                if (adverb == null) {
+                    // Assume climbing up
+                    command = GameCommand.CLIMB_UP;
+                    command.setNoun(noun);
+                } else {
+                    if (Adverb.UP.equals(adverb)) {
+                        command = GameCommand.CLIMB_UP;
+                        command.setNoun(noun);
+                    } else if (Adverb.DOWN.equals(adverb)) {
+                        command = GameCommand.CLIMB_DOWN;
+                    }
+                }
+            } else if (Adverb.UP.equals(adverb) || Adverb.DOWN.equals(adverb)) {
+                commandCache.displayQuestionAndRetainVerbAndAdverb("What would you like to climb " + adverb.toString().toLowerCase() + "?", verb, adverb);
+                questionReturned = true;
+            } else {
+                commandCache.displayQuestionAndRetainVerb("What would you like to climb?", verb);
+                questionReturned = true;
+            }
+        } else if (Verb.EXIT.equals(verb)) {
             command = GameCommand.EXIT;
         }  else if (Verb.FAILED_TO_PARSE.equals(verb)) {
             command = GameCommand.FAILED_TO_PARSE;

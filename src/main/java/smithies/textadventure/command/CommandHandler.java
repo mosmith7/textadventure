@@ -1,9 +1,7 @@
 package smithies.textadventure.command;
 
-import smithies.textadventure.item.ItemName;
 import smithies.textadventure.rooms.Room;
 import smithies.textadventure.rooms.RoomName;
-import smithies.textadventure.searchable.Searchable;
 import smithies.textadventure.session.AllRooms;
 import smithies.textadventure.session.Player;
 import smithies.textadventure.ui.DisplayConsoleOutput;
@@ -42,6 +40,16 @@ public class CommandHandler {
                 break;
             case WEST:
                 handleRoomName(player, allRooms, player.goWest());
+                break;
+            case CLIMB_UP:
+                player.climbUp(command.getNoun());
+                break;
+            case CLIMB_DOWN:
+                if (command.getNoun() != null) {
+                    player.climbDown(command.getNoun());
+                } else {
+                    player.climbDown();
+                }
                 break;
             case TAKE:
                 if (player.canTakeItem(command.getNoun())) {

@@ -7,7 +7,7 @@ public enum Noun {
 
     TENNIS_BALL("tennis ball", "ball"),
 
-    WOODEN_SHELF("wooden shelf", "shelf"),
+    SIDEBOARD("sideboard"),
     DOG_BED("dog bed", "bed"),
 
     ;

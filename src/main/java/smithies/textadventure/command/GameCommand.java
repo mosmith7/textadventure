@@ -9,6 +9,9 @@ public enum GameCommand {
     EAST(Verb.GO, Adverb.EAST),
     WEST(Verb.GO, Adverb.WEST),
 
+    CLIMB_UP(Verb.CLIMB, Adverb.UP),
+    CLIMB_DOWN(Verb.CLIMB, Adverb.DOWN),
+
     WAIT(Verb.WAIT, null),
     LOOK(Verb.SEARCH, null),
 

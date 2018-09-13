@@ -1,16 +1,13 @@
 package smithies.textadventure.session;
 
-import smithies.textadventure.command.Adverb;
-import smithies.textadventure.command.CommandCache;
-import smithies.textadventure.command.CommandHandler;
-import smithies.textadventure.command.UserInputCommand;
+import smithies.textadventure.command.*;
 import smithies.textadventure.item.Item;
 import smithies.textadventure.item.TennisBall;
 import smithies.textadventure.rooms.Room;
 import smithies.textadventure.rooms.RoomName;
-import smithies.textadventure.searchable.DogBed;
-import smithies.textadventure.searchable.Searchable;
-import smithies.textadventure.searchable.WoodenShelf;
+import smithies.textadventure.interactable.searchable.DogBed;
+import smithies.textadventure.interactable.searchable.Searchable;
+import smithies.textadventure.interactable.searchable.Sideboard;
 import smithies.textadventure.ui.DisplayConsoleOutput;
 import smithies.textadventure.ui.DisplayOutput;
 import smithies.textadventure.ui.UserTextInputParser;
@@ -58,7 +55,7 @@ public class SessionManager {
     }
 
     private void initialiseSearchables() {
-        WoodenShelf shelf = new WoodenShelf("Against the wall is a wooden shelf.");
+        Sideboard shelf = new Sideboard("Against the wall is a " + Noun.SIDEBOARD);
         hideItemInSearchable(RoomName.HALL_SOUTH, shelf, new TennisBall(), Adverb.UNDER);
 
         DogBed dogBed = new DogBed("Against the wall is a nice soft bed. Your bed.");

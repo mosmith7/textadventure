@@ -10,6 +10,9 @@ public enum Adverb {
     EAST("east"),
     WEST("west"),
 
+    UP("up"),
+    DOWN("down"),
+
     UNDER("under"),
     ON("on"),
     IN("in"),

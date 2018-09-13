@@ -3,7 +3,7 @@ package smithies.textadventure.rooms;
 import smithies.textadventure.command.Adverb;
 import smithies.textadventure.command.Noun;
 import smithies.textadventure.item.Item;
-import smithies.textadventure.searchable.Searchable;
+import smithies.textadventure.interactable.searchable.Searchable;
 import smithies.textadventure.session.Player;
 import smithies.textadventure.ui.DisplayConsoleOutput;
 import smithies.textadventure.ui.DisplayOutput;

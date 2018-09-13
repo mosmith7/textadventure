@@ -6,6 +6,7 @@ import java.util.List;
 public enum Verb {
 
     GO("move", "go", "walk"),
+    CLIMB("climb"),
 
     WAIT("wait"),
 

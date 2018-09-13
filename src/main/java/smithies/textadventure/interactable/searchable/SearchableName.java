@@ -1,10 +1,10 @@
-package smithies.textadventure.searchable;
+package smithies.textadventure.interactable.searchable;
 
 import smithies.textadventure.command.Noun;
 
 public enum SearchableName {
 
-    WOODEN_SHELF(Noun.WOODEN_SHELF),
+    SIDEBOARD(Noun.SIDEBOARD),
     DOG_BED(Noun.DOG_BED),
 
     ;

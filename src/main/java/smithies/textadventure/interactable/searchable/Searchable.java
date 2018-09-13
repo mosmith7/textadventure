@@ -1,8 +1,9 @@
-package smithies.textadventure.searchable;
+package smithies.textadventure.interactable.searchable;
 
 import smithies.textadventure.command.Adverb;
 import smithies.textadventure.command.Nameable;
 import smithies.textadventure.command.Noun;
+import smithies.textadventure.interactable.climbable.Climbable;
 import smithies.textadventure.item.Item;
 import smithies.textadventure.ui.DisplayConsoleOutput;
 import smithies.textadventure.ui.DisplayOutput;
@@ -11,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-public abstract class Searchable extends Nameable {
+public abstract class Searchable extends Nameable implements Climbable {
 
     protected DisplayOutput output = new DisplayConsoleOutput();
     private String positionDescription;
@@ -40,6 +41,14 @@ public abstract class Searchable extends Nameable {
 
     public void goTo() {
         output.displayTextLine("You walk over to the " + getName());
+    }
+
+    public void displayClimbUpSuccess() {
+        output.displayTextLine("You successfully climb up onto the top of the " + getName());
+    }
+
+    public void displayClimbDownSuccess() {
+        output.displayTextLine("You successfully climb down off of the " + getName());
     }
 
 }

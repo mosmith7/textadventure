@@ -1,4 +1,4 @@
-package smithies.textadventure.searchable;
+package smithies.textadventure.interactable.searchable;
 
 import smithies.textadventure.command.Adverb;
 import smithies.textadventure.command.Noun;

@@ -1,17 +1,17 @@
-package smithies.textadventure.searchable;
+package smithies.textadventure.interactable.searchable;
 
 import smithies.textadventure.command.Adverb;
-import smithies.textadventure.command.Noun;
+import smithies.textadventure.interactable.climbable.ClimbResult;
 import smithies.textadventure.item.Item;
 
 import java.util.Optional;
 
-public class WoodenShelf extends Searchable {
+public class Sideboard extends Searchable {
 
-    private static final Noun WOODEN_SHELF = Noun.WOODEN_SHELF;
+    private static final SearchableName SIDEBOARD = SearchableName.SIDEBOARD;
 
-    public WoodenShelf(String positionDescription) {
-        super(WOODEN_SHELF, positionDescription);
+    public Sideboard(String positionDescription) {
+        super(SIDEBOARD.getNoun(), positionDescription);
     }
 
     @Override
@@ -33,5 +33,11 @@ public class WoodenShelf extends Searchable {
 
         return Optional.empty();
     }
+
+    @Override
+    public ClimbResult attemptClimb() {
+        return new ClimbResult(true, "It isn't graceful, but you scramble up onto the " + getName());
+    }
+
 
 }
