@@ -1,11 +1,12 @@
 package smithies.textadventure.character.npc;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import smithies.textadventure.character.BaseCharacter;
 import smithies.textadventure.command.Adverb;
 import smithies.textadventure.command.Directions;
 import smithies.textadventure.item.Inventory;
 import smithies.textadventure.rooms.Room;
-import smithies.textadventure.rooms.RoomName;
 import smithies.textadventure.session.AllRooms;
 
 import java.util.List;
@@ -13,6 +14,8 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 public class Misty extends BaseCharacter implements Npc {
+
+    private static final Logger LOG = LoggerFactory.getLogger(Misty.class);
 
     private AllRooms allRooms;
 
@@ -47,8 +50,7 @@ public class Misty extends BaseCharacter implements Npc {
         if (directionOptions.size() > 0) {
             goDirection(chooseRandomDirection(directionOptions)).ifPresent(roomName -> {
                 this.currentRoom = allRooms.get(roomName);
-                // TODO: turn this into a debug statement
-                System.out.println("Misty is in: " + roomName);
+                LOG.debug("Misty is in: " + roomName);
             });
         }
 
