@@ -1,10 +1,5 @@
 package smithies.textadventure.rooms;
 
-import java.util.Arrays;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Set;
-
 public enum RoomName {
 
     DEADEND(false),

@@ -1,4 +1,4 @@
-package smithies.textadventure.session;
+package smithies.textadventure.character;
 
 import smithies.textadventure.command.Adverb;
 import smithies.textadventure.command.Noun;
@@ -14,52 +14,39 @@ import smithies.textadventure.ui.DisplayOutput;
 
 import java.util.Optional;
 
-public class Player {
+public class Player extends BaseCharacter {
 
-    private Room currentRoom;
-    private Inventory inventory = new Inventory(1);
     private ClimbInteraction climbInteraction = new ClimbInteraction();
     private DisplayOutput output = new DisplayConsoleOutput();
 
     public Player(Room currentRoom) {
         this.currentRoom = currentRoom;
-    }
-
-    public void viewInventory() {
-        inventory.view();
-    }
-
-    public boolean isInventoryFull() {
-        return inventory.isFull();
-    }
-
-    public boolean isInventoryEmpty() {
-        return inventory.isEmpty();
-    }
-
-    public Optional<Noun> inventoryPeek() {
-        return inventory.peek();
+        this.inventory = new Inventory(1);
     }
 
     public void enterRoom() {
         this.currentRoom.enter();
     }
 
+    @Override
     public RoomName goNorth() {
         if (isOnAnyClimbable()) climbDown();
         return this.currentRoom.goNorth();
     }
 
+    @Override
     public RoomName goSouth() {
         if (isOnAnyClimbable()) climbDown();
         return this.currentRoom.goSouth();
     }
 
+    @Override
     public RoomName goEast() {
         if (isOnAnyClimbable()) climbDown();
         return this.currentRoom.goEast();
     }
 
+    @Override
     public RoomName goWest() {
         if (isOnAnyClimbable()) climbDown();
         return this.currentRoom.goWest();
@@ -70,35 +57,6 @@ public class Player {
         displayOnClimbableDescription();
     }
 
-    public boolean canTakeItem(Noun itemName) {
-        return currentRoom.hasItem(itemName);
-    }
-
-    public void takeItem(Noun itemName) {
-        currentRoom.takeItem(this, itemName).ifPresent(item -> {
-            if (inventory.isFull()) {
-                currentRoom.addItem(item, "");
-            } else {
-                inventory.addItem(item);
-            }
-        });
-    }
-
-    public void dropItem(Noun itemName) {
-        inventory.removeItem(itemName).ifPresent(item -> {
-            currentRoom.addItem(item, onFloorDescription(item));
-        });
-
-    }
-
-    public void setCurrentRoom(Room currentRoom) {
-        this.currentRoom = currentRoom;
-    }
-
-    public Room getCurrentRoom() {
-        return currentRoom;
-    }
-
     public void search(Noun name, Adverb adverb) {
         Optional<Item> optionalItem = getCurrentRoom().search(name, adverb);
         if (optionalItem.isPresent()) {
@@ -106,7 +64,7 @@ public class Player {
             if (!isInventoryFull()) {
                 inventory.addItem(item);
             } else {
-                currentRoom.addItem(item, onFloorDescription(item));
+                currentRoom.addItemToFloor(item);
             }
         }
     }
@@ -158,9 +116,5 @@ public class Player {
         if (this.climbInteraction.isOnAnyClimbable()) {
             output.displayTextLine("You are on top of a " + this.climbInteraction.getClimbableName());
         }
-    }
-
-    private String onFloorDescription(Item item) {
-        return "On the floor is a " + item.getName();
     }
 }

@@ -1,10 +1,11 @@
 package smithies.textadventure.rooms;
 
+import smithies.textadventure.character.npc.Npc;
 import smithies.textadventure.command.Adverb;
 import smithies.textadventure.command.Noun;
 import smithies.textadventure.item.Item;
 import smithies.textadventure.interactable.searchable.Interactable;
-import smithies.textadventure.session.Player;
+import smithies.textadventure.character.GameCharacter;
 import smithies.textadventure.ui.DisplayConsoleOutput;
 import smithies.textadventure.ui.DisplayOutput;
 
@@ -30,6 +31,27 @@ public abstract class Room {
     public abstract RoomName goEast();
 
     public abstract RoomName goWest();
+
+    public Optional<RoomName> goDirection(Adverb direction) {
+        RoomName roomName;
+        switch (direction) {
+            case NORTH:
+                roomName = goNorth();
+                break;
+            case EAST:
+                roomName = goEast();
+                break;
+            case SOUTH:
+                roomName = goSouth();
+                break;
+            case WEST:
+                roomName = goWest();
+                break;
+            default:
+                throw new RuntimeException("Invalid direction supplied");
+        }
+        return Optional.ofNullable(roomName);
+    }
 
     protected boolean isFirstEntrance() {
         return isFirstEntrance;
@@ -64,12 +86,17 @@ public abstract class Room {
         itemPositionDescription.put(item, positionDescription);
     }
 
+    public void addItemToFloor(Item item) {
+        items.add(item);
+        itemPositionDescription.put(item, onFloorDescription(item));
+    }
+
     public boolean hasItem(Noun itemName) {
         return items.stream().map(Item::getName).collect(Collectors.toList()).contains(itemName);
     }
 
-    public Optional<Item> takeItem(Player player, Noun name) {
-        if (!player.isInventoryFull()) {
+    public Optional<Item> takeItem(GameCharacter character, Noun name) {
+        if (!character.isInventoryFull()) {
             Optional<Item> item = items.stream().filter(i -> i.getName().equals(name)).findFirst();
             item.ifPresent(i -> {
                 items.remove(i);
@@ -111,5 +138,9 @@ public abstract class Room {
 
     public void goToSearchable(Noun searchableName) {
         getSearchable(searchableName).ifPresent(Interactable::goTo);
+    }
+
+    private String onFloorDescription(Item item) {
+        return "On the floor is a " + item.getName();
     }
 }

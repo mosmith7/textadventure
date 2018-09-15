@@ -1,5 +1,10 @@
 package smithies.textadventure.rooms;
 
+import smithies.textadventure.command.Adverb;
+import smithies.textadventure.command.Verb;
+
+import java.util.Optional;
+
 public class LivingRoom extends Room {
 
     private RoomName name = RoomName.LIVING_ROOM;

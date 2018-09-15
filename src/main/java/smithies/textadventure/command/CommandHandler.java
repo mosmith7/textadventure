@@ -3,7 +3,7 @@ package smithies.textadventure.command;
 import smithies.textadventure.rooms.Room;
 import smithies.textadventure.rooms.RoomName;
 import smithies.textadventure.session.AllRooms;
-import smithies.textadventure.session.Player;
+import smithies.textadventure.character.Player;
 import smithies.textadventure.ui.DisplayConsoleOutput;
 
 public class CommandHandler {

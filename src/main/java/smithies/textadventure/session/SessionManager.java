@@ -1,5 +1,8 @@
 package smithies.textadventure.session;
 
+import smithies.textadventure.character.Player;
+import smithies.textadventure.character.npc.Misty;
+import smithies.textadventure.character.npc.Npc;
 import smithies.textadventure.command.*;
 import smithies.textadventure.item.Item;
 import smithies.textadventure.item.TennisBall;
@@ -13,16 +16,20 @@ import smithies.textadventure.ui.DisplayOutput;
 import smithies.textadventure.ui.UserTextInputParser;
 import smithies.textadventure.ui.UserTextInputRetriever;
 
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class SessionManager {
 
     private UserTextInputRetriever inputRetriever = new UserTextInputRetriever();
     private UserTextInputParser inputParser = new UserTextInputParser();
     private CommandHandler commandHandler = new CommandHandler();
     private DisplayOutput output = new DisplayConsoleOutput();
-    private CommandCache commandCache = new CommandCache();
 
     private AllRooms allRooms;
     private Player player;
+    private List<Npc> npcs = new ArrayList<>();
 
     public SessionManager() {
     }
@@ -32,6 +39,7 @@ public class SessionManager {
         allRooms = new AllRooms();
         distributeItems();
         initialiseSearchables();
+        initialiseNpcs();
 
         player = new Player(allRooms.get(RoomName.HALL_SOUTH));
         player.enterRoom();
@@ -41,6 +49,8 @@ public class SessionManager {
             userCommand.toGameCommand().ifPresent(gameCommand -> {
                 commandHandler.processCommand(player, allRooms, gameCommand);
             });
+            doNpcTurns();
+            displayNpcsInSameRoom();
         }
     }
 
@@ -66,6 +76,23 @@ public class SessionManager {
         searchable.addItem(item, adverb);
         Room room = allRooms.get(roomName);
         room.addSearchable(searchable);
+    }
+
+    private void initialiseNpcs() {
+        Misty misty = new Misty(allRooms, allRooms.get(RoomName.LIVING_ROOM));
+        npcs.add(misty);
+    }
+
+    private void doNpcTurns() {
+        npcs.forEach(Npc::takeTurn);
+    }
+
+    private void displayNpcsInSameRoom() {
+        npcs.forEach(npc -> {
+            if (player.getCurrentRoom().equals(npc.getCurrentRoom())) {
+                output.displayTextLines(npc.getDescriptionWhenInSameRoom());
+            }
+        });
     }
 
 }
