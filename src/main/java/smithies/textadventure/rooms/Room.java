@@ -91,6 +91,14 @@ public abstract class Room {
         itemPositionDescription.put(item, onFloorDescription(item));
     }
 
+    public boolean hasItem() {
+        return items.size() > 0;
+    }
+
+    public Noun peekItem() {
+        return items.get(0).getName();
+    }
+
     public boolean hasItem(Noun itemName) {
         return items.stream().map(Item::getName).collect(Collectors.toList()).contains(itemName);
     }

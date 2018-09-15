@@ -9,6 +9,8 @@ import smithies.textadventure.item.Inventory;
 import smithies.textadventure.rooms.Room;
 import smithies.textadventure.session.AllRooms;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -27,17 +29,20 @@ public class Misty extends BaseCharacter implements Npc {
 
     @Override
     public String[] getDescriptionWhenInSameRoom() {
-        return new String[]{
-            "A fluffy black quadruped is standing in the room.",
-            "It looks like it wants to play."
-        };
+        List<String> messages = new ArrayList<>();
+        messages.add("A fluffy black quadruped is standing in the room.");
+        messages.add("It looks like it wants to play.");
+        if (!inventory.isEmpty()) {
+            messages.add("In it's mouth is a " + inventory.peek().get().name());
+        }
+        return messages.toArray(new String[0]);
     }
 
     @Override
     public void takeTurn() {
         // Misty should try to migrate to where the most humans are
         // But if she is in a room with a toy, she will try to take it
-        // She should also have a tendancy to circle
+        // She should also have a tendancy to circle around the house
 
         List<Adverb> directionOptions = Directions.ALL_DIRECTIONS.stream().filter(d -> {
             boolean canMoveInDirection = false;
@@ -54,7 +59,12 @@ public class Misty extends BaseCharacter implements Npc {
             });
         }
 
-        // TODO: If there is an unguarded toy in the same room take it.
+        if (currentRoom.hasItem() && !isInventoryFull()) {
+            currentRoom.takeItem(this, currentRoom.peekItem()).ifPresent(item -> {
+                inventory.addItem(item);
+                LOG.debug("Misty has picked up a: " + item.getName());
+            });
+        }
     }
 
     private Adverb chooseRandomDirection(List<Adverb> directions) {
