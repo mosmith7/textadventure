@@ -6,7 +6,7 @@ import smithies.textadventure.item.TennisBall;
 import smithies.textadventure.rooms.Room;
 import smithies.textadventure.rooms.RoomName;
 import smithies.textadventure.interactable.searchable.DogBed;
-import smithies.textadventure.interactable.searchable.Searchable;
+import smithies.textadventure.interactable.searchable.Interactable;
 import smithies.textadventure.interactable.searchable.Sideboard;
 import smithies.textadventure.ui.DisplayConsoleOutput;
 import smithies.textadventure.ui.DisplayOutput;
@@ -62,7 +62,7 @@ public class SessionManager {
         hideItemInSearchable(RoomName.KITCHEN_SOUTH, dogBed, new TennisBall(), Adverb.UNDER);
     }
 
-    private void hideItemInSearchable(RoomName roomName, Searchable searchable, Item item, Adverb adverb) {
+    private void hideItemInSearchable(RoomName roomName, Interactable searchable, Item item, Adverb adverb) {
         searchable.addItem(item, adverb);
         Room room = allRooms.get(roomName);
         room.addSearchable(searchable);

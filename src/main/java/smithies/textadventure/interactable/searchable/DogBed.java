@@ -6,7 +6,7 @@ import smithies.textadventure.item.Item;
 
 import java.util.Optional;
 
-public class DogBed extends Searchable {
+public class DogBed extends Interactable {
 
     private static final Noun DOG_BED = Noun.DOG_BED;
 
@@ -15,7 +15,7 @@ public class DogBed extends Searchable {
     }
 
     @Override
-    public Optional<Item> tryAndSearch(Adverb adverb) {
+    public Optional<Item> searchAndResolve(Adverb adverb) {
         Optional<Item> optionalItem = search(adverb);
         switch (adverb) {
             case UNDER:

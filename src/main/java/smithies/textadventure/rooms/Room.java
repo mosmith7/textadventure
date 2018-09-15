@@ -3,7 +3,7 @@ package smithies.textadventure.rooms;
 import smithies.textadventure.command.Adverb;
 import smithies.textadventure.command.Noun;
 import smithies.textadventure.item.Item;
-import smithies.textadventure.interactable.searchable.Searchable;
+import smithies.textadventure.interactable.searchable.Interactable;
 import smithies.textadventure.session.Player;
 import smithies.textadventure.ui.DisplayConsoleOutput;
 import smithies.textadventure.ui.DisplayOutput;
@@ -17,7 +17,7 @@ public abstract class Room {
     private boolean isFirstEntrance = true;
     private List<Item> items = new ArrayList<>();
     private Map<Item, String> itemPositionDescription = new HashMap<>();
-    private List<Searchable> searchables = new ArrayList<>();
+    private List<Interactable> searchables = new ArrayList<>();
 
     public abstract RoomName getName();
 
@@ -86,7 +86,7 @@ public abstract class Room {
         });
     }
 
-    public void addSearchable(Searchable searchable) {
+    public void addSearchable(Interactable searchable) {
         searchables.add(searchable);
     }
 
@@ -94,7 +94,7 @@ public abstract class Room {
         return getSearchable(searchableName).isPresent();
     }
 
-    public Optional<Searchable> getSearchable(Noun searchableName) {
+    public Optional<Interactable> getSearchable(Noun searchableName) {
         return searchables.stream()
                 .filter(s -> searchableName.equals(s.getName()))
                 .findFirst();
@@ -102,14 +102,14 @@ public abstract class Room {
 
     public Optional<Item> search(Noun name, Adverb adverb) {
         Optional<Item> item = Optional.empty();
-        Optional<Searchable> searchable = searchables.stream().filter(s -> name.equals(s.getName())).findFirst();
+        Optional<Interactable> searchable = searchables.stream().filter(s -> name.equals(s.getName())).findFirst();
         if (searchable.isPresent()) {
-            item = searchable.get().tryAndSearch(adverb);
+            item = searchable.get().searchAndResolve(adverb);
         }
         return item;
     }
 
     public void goToSearchable(Noun searchableName) {
-        getSearchable(searchableName).ifPresent(Searchable::goTo);
+        getSearchable(searchableName).ifPresent(Interactable::goTo);
     }
 }

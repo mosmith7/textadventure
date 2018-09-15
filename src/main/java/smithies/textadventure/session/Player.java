@@ -8,7 +8,7 @@ import smithies.textadventure.item.Inventory;
 import smithies.textadventure.item.Item;
 import smithies.textadventure.rooms.Room;
 import smithies.textadventure.rooms.RoomName;
-import smithies.textadventure.interactable.searchable.Searchable;
+import smithies.textadventure.interactable.searchable.Interactable;
 import smithies.textadventure.ui.DisplayConsoleOutput;
 import smithies.textadventure.ui.DisplayOutput;
 
@@ -46,22 +46,22 @@ public class Player {
     }
 
     public RoomName goNorth() {
-        climbDown();
+        if (isOnAnyClimbable()) climbDown();
         return this.currentRoom.goNorth();
     }
 
     public RoomName goSouth() {
-        climbDown();
+        if (isOnAnyClimbable()) climbDown();
         return this.currentRoom.goSouth();
     }
 
     public RoomName goEast() {
-        climbDown();
+        if (isOnAnyClimbable()) climbDown();
         return this.currentRoom.goEast();
     }
 
     public RoomName goWest() {
-        climbDown();
+        if (isOnAnyClimbable()) climbDown();
         return this.currentRoom.goWest();
     }
 
@@ -112,14 +112,14 @@ public class Player {
     }
 
     public void climbUp(Noun name) {
-        if (this.climbInteraction.inOnAnyClimbable()) {
+        if (this.climbInteraction.isOnAnyClimbable()) {
             output.displayTextLine("You can't climb again, you are already on a " + this.climbInteraction.getClimbableName());
             return;
         }
 
-        Optional<Searchable> optionalSearchable = getCurrentRoom().getSearchable(name);
+        Optional<Interactable> optionalSearchable = getCurrentRoom().getSearchable(name);
         if (optionalSearchable.isPresent()) {
-            Searchable searchable = optionalSearchable.get();
+            Interactable searchable = optionalSearchable.get();
             ClimbResult climbResult = searchable.attemptClimb();
             if (climbResult.isSuccess()) {
                 this.climbInteraction.climbUp(searchable);
@@ -142,7 +142,7 @@ public class Player {
     }
 
     public void climbDown() {
-        if (this.climbInteraction.inOnAnyClimbable()) {
+        if (isOnAnyClimbable()) {
             this.climbInteraction.climbDown();
             output.displayTextLine("You climb down");
         } else {
@@ -150,8 +150,12 @@ public class Player {
         }
     }
 
+    public boolean isOnAnyClimbable() {
+        return this.climbInteraction.isOnAnyClimbable();
+    }
+
     private void displayOnClimbableDescription() {
-        if (this.climbInteraction.inOnAnyClimbable()) {
+        if (this.climbInteraction.isOnAnyClimbable()) {
             output.displayTextLine("You are on top of a " + this.climbInteraction.getClimbableName());
         }
     }

@@ -17,12 +17,12 @@ public class ClimbInteraction {
         this.climbable = null;
     }
 
-    public boolean inOnAnyClimbable() {
+    public boolean isOnAnyClimbable() {
         return onClimbable;
     }
 
     public boolean inOnClimbable(Noun noun) {
-        return inOnAnyClimbable() && climbable.getName().equals(noun);
+        return isOnAnyClimbable() && climbable.getName().equals(noun);
     }
 
     public Noun getClimbableName() {
