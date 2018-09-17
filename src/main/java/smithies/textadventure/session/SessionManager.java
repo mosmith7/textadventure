@@ -4,6 +4,7 @@ import smithies.textadventure.character.Player;
 import smithies.textadventure.character.npc.Misty;
 import smithies.textadventure.character.npc.Npc;
 import smithies.textadventure.command.*;
+import smithies.textadventure.command.state.ViewInventory;
 import smithies.textadventure.item.Item;
 import smithies.textadventure.item.TennisBall;
 import smithies.textadventure.rooms.Room;
@@ -46,11 +47,15 @@ public class SessionManager {
         while(true) {
             String input = inputRetriever.getLine();
             UserInputCommand userCommand = inputParser.parseString(input);
-            userCommand.toGameCommand().ifPresent(gameCommand -> {
-                commandHandler.processCommand(player, allRooms, gameCommand);
+            userCommand.toGameCommand(player, allRooms).ifPresent(gameCommand -> {
+                commandHandler.setCurrentState(gameCommand);
+                commandHandler.processCommand();
             });
             doNpcTurns();
-            displayNpcsInSameRoom();
+            if (!(commandHandler.getCurrentState() instanceof ViewInventory)) {
+                // TODO: should other commands prevent this being displayed?
+                displayNpcsInSameRoom();
+            }
         }
     }
 

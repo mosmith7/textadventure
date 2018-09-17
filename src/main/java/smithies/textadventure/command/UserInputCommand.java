@@ -1,5 +1,9 @@
 package smithies.textadventure.command;
 
+import smithies.textadventure.character.Player;
+import smithies.textadventure.command.state.*;
+import smithies.textadventure.session.AllRooms;
+
 import java.util.Optional;
 import java.util.Random;
 
@@ -47,7 +51,7 @@ public class UserInputCommand {
 
     }
 
-    public Optional<GameCommand> toGameCommand() {
+    public Optional<GameCommandState> toGameCommand(Player player, AllRooms allRooms) {
         // Get any cached commands from when a question was asked
         if (verb == null && adverb == null) {
             Optional<Verb> cachedVerb = commandCache.getCachedVerb();
@@ -61,102 +65,70 @@ public class UserInputCommand {
         }
 
         boolean questionReturned = false;
-        GameCommand command = null;
+        GameCommandState command = null;
 
         if (Verb.GO.equals(verb) && adverb == null) {
             if (noun != null) {
-                command = GameCommand.GO_TO_NOUN;
-                command.setNoun(noun);
+                command = new GoToNoun(player, noun);
             } else {
                 commandCache.displayQuestionAndRetainVerb("Go where?", verb);
                 questionReturned = true;
             }
-        } else if ((verb == null || Verb.GO.equals(verb)) && Adverb.NORTH.equals(adverb)) {
-            command = GameCommand.NORTH;
-        } else if ((verb == null || Verb.GO.equals(verb)) && Adverb.SOUTH.equals(adverb)) {
-            command = GameCommand.SOUTH;
-        } else if ((verb == null || Verb.GO.equals(verb)) && Adverb.EAST.equals(adverb)) {
-            command = GameCommand.EAST;
-        } else if ((verb == null || Verb.GO.equals(verb)) && Adverb.WEST.equals(adverb)) {
-            command = GameCommand.WEST;
+        } else if ((verb == null || Verb.GO.equals(verb)) && adverbIsValidDirection(adverb)) {
+            command = new GoDirection(player, adverb, allRooms);
         } else if (Verb.WAIT.equals(verb)) {
-            command = GameCommand.WAIT;
+            command = new Wait();
         } else if (Verb.EXAMINE.equals(verb)) {
             if (noun != null) {
-                command = GameCommand.EXAMINE;
-                command.setNoun(noun);
+                command = new Examine(player, noun);
             } else {
                 commandCache.displayQuestionAndRetainVerb("What would you like to examine?", verb);
                 questionReturned = true;
             }
         } else if (Verb.INVENTORY.equals(verb)) {
-            command = GameCommand.INVENTORY;
+            command = new ViewInventory(player);
         } else if (Verb.TAKE.equals(verb)) {
             if (noun != null) {
-                command = GameCommand.TAKE;
-                command.setNoun(noun);
+                command = new Take(player, noun);
             } else {
                 commandCache.displayQuestionAndRetainVerb("What would you like to take?", verb);
                 questionReturned = true;
             }
         } else if (Verb.DROP.equals(verb)) {
-            command = GameCommand.DROP;
+            command = new Drop(player, noun);
         } else if (Verb.SEARCH.equals(verb) && adverb == null && noun == null) {
-            command = GameCommand.LOOK;
+            command = new Look(player);
         } else if (Verb.SEARCH.equals(verb) && adverb == null) {
             // Randomly pick a type of search technique
             if (noun != null) {
-                command = chooseRandomSearchCommand();
-                command.setNoun(noun);
+                adverb = chooseRandomSearchAdverb();
+                command = new Search(player, adverb, noun);
             }
-        } else if (Verb.SEARCH.equals(verb) && Adverb.UNDER.equals(adverb)) {
+        } else if (Verb.SEARCH.equals(verb) && adverbIsValidSearch(adverb)) {
             if (noun != null) {
-                command = GameCommand.SEARCH_UNDER;
-                command.setNoun(noun);
+                command = new Search(player, adverb, noun);
             } else {
                 commandCache.displayQuestionAndRetainVerbAndAdverb("What would you like to search under?", verb, adverb);
                 questionReturned = true;
             }
-        } else if (Verb.SEARCH.equals(verb) && Adverb.IN.equals(adverb)) {
-            if (noun != null) {
-                command = GameCommand.SEARCH_IN;
-                command.setNoun(noun);
-            } else {
-                commandCache.displayQuestionAndRetainVerbAndAdverb("What would you like to search in?", verb, adverb);
-                questionReturned = true;
-            }
-        } else if (Verb.SEARCH.equals(verb) && Adverb.ON.equals(adverb)) {
-            if (noun != null) {
-                command = GameCommand.SEARCH_ON;
-                command.setNoun(noun);
-            } else {
-                commandCache.displayQuestionAndRetainVerbAndAdverb("What would you like to search on?", verb, adverb);
-                questionReturned = true;
-            }
         } else if (Verb.BARK.equals(verb)) {
-            command = GameCommand.BARK;
+            command = new Bark();
         }  else if (Verb.WHINE.equals(verb)) {
-            command = GameCommand.WHINE;
+            command = new Whine();
         }  else if (Verb.GROWL.equals(verb)) {
-            command = GameCommand.GROWL;
+            command = new Growl();
         }  else if (Verb.SCRATCH.equals(verb)) {
-            GameCommand scratch = GameCommand.SCRATCH;
-            if (noun != null) {
-                scratch.setNoun(noun);
-            }
-            command = scratch;
+            command = new Scratch(noun);
         } else if (Verb.CLIMB.equals(verb)) {
             if (noun != null) {
                 if (adverb == null) {
                     // Assume climbing up
-                    command = GameCommand.CLIMB_UP;
-                    command.setNoun(noun);
+                    command = new ClimbDirection(player, Adverb.UP);
                 } else {
                     if (Adverb.UP.equals(adverb)) {
-                        command = GameCommand.CLIMB_UP;
-                        command.setNoun(noun);
+                        command = new ClimbDirection(player, Adverb.UP, noun);
                     } else if (Adverb.DOWN.equals(adverb)) {
-                        command = GameCommand.CLIMB_DOWN;
+                        command = new ClimbDirection(player, Adverb.DOWN, noun);
                     }
                 }
             } else if (Adverb.UP.equals(adverb) || Adverb.DOWN.equals(adverb)) {
@@ -167,11 +139,11 @@ public class UserInputCommand {
                 questionReturned = true;
             }
         } else if (Verb.EXIT.equals(verb)) {
-            command = GameCommand.EXIT;
+            command = new Exit();
         }  else if (Verb.FAILED_TO_PARSE.equals(verb)) {
-            command = GameCommand.FAILED_TO_PARSE;
+            command = new FailedToParse();
         } else {
-            command = GameCommand.FAILED_TO_PARSE;
+            command = new FailedToParse();
         }
 
         if (!questionReturned) {
@@ -181,20 +153,33 @@ public class UserInputCommand {
         return Optional.ofNullable(command);
     }
 
-    private GameCommand chooseRandomSearchCommand() {
+    private Adverb chooseRandomSearchAdverb() {
         int options = 3;
         int option = new Random().nextInt(options);
         switch (option) {
             case 0:
-                return GameCommand.SEARCH_UNDER;
+                return Adverb.UNDER;
             case 1:
-                return GameCommand.SEARCH_ON;
+                return Adverb.ON;
             case 2:
-                return GameCommand.SEARCH_IN;
+                return Adverb.IN;
             default:
                 System.out.println("Error: Failed to choose random search adverb. Code should not get here.");
                 break;
         }
-        return GameCommand.SEARCH_UNDER;
+        return Adverb.UNDER;
+    }
+
+    private boolean adverbIsValidDirection(Adverb adverb) {
+        return Adverb.NORTH.equals(adverb) ||
+                Adverb.SOUTH.equals(adverb) ||
+                Adverb.EAST.equals(adverb) ||
+                Adverb.WEST.equals(adverb);
+    }
+
+    private boolean adverbIsValidSearch(Adverb adverb) {
+        return Adverb.UNDER.equals(adverb) ||
+                Adverb.ON.equals(adverb) ||
+                Adverb.IN.equals(adverb);
     }
 }
