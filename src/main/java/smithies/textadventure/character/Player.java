@@ -29,27 +29,9 @@ public class Player extends BaseCharacter {
     }
 
     @Override
-    public RoomName goNorth() {
+    public Optional<RoomName> goDirection(Adverb direction) {
         if (isOnAnyClimbable()) climbDown();
-        return this.currentRoom.goNorth();
-    }
-
-    @Override
-    public RoomName goSouth() {
-        if (isOnAnyClimbable()) climbDown();
-        return this.currentRoom.goSouth();
-    }
-
-    @Override
-    public RoomName goEast() {
-        if (isOnAnyClimbable()) climbDown();
-        return this.currentRoom.goEast();
-    }
-
-    @Override
-    public RoomName goWest() {
-        if (isOnAnyClimbable()) climbDown();
-        return this.currentRoom.goWest();
+        return this.currentRoom.goDirection(direction);
     }
 
     public void look() {

@@ -15,44 +15,7 @@ public abstract class BaseCharacter implements GameCharacter {
 
     @Override
     public Optional<RoomName> goDirection(Adverb direction) {
-        RoomName roomName;
-        switch (direction) {
-            case NORTH:
-                roomName = goNorth();
-                break;
-            case EAST:
-                roomName = goEast();
-                break;
-            case SOUTH:
-                roomName = goSouth();
-                break;
-            case WEST:
-                roomName = goWest();
-                break;
-            default:
-                throw new RuntimeException("Invalid direction supplied");
-        }
-        return Optional.ofNullable(roomName);
-    }
-
-    @Override
-    public RoomName goNorth() {
-        return this.currentRoom.goNorth();
-    }
-
-    @Override
-    public RoomName goSouth() {
-        return this.currentRoom.goSouth();
-    }
-
-    @Override
-    public RoomName goEast() {
-        return this.currentRoom.goEast();
-    }
-
-    @Override
-    public RoomName goWest() {
-        return this.currentRoom.goWest();
+        return this.currentRoom.goDirection(direction);
     }
 
     @Override

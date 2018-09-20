@@ -28,14 +28,6 @@ public abstract class Room {
 
     public abstract RoomName getName();
 
-    public abstract RoomName goNorth();
-
-    public abstract RoomName goSouth();
-
-    public abstract RoomName goEast();
-
-    public abstract RoomName goWest();
-
     public void addRoom(Adverb direction, RoomName room, RoomPartition door) {
         roomsByDirection.put(direction, room);
         doorsByDirection.put(direction, door);
@@ -53,20 +45,20 @@ public abstract class Room {
         String[] lines = new String[Directions.ALL_DIRECTIONS.size()];
         for (int i = 0; i < Directions.ALL_DIRECTIONS.size(); i++) {
             Adverb direction = Directions.ALL_DIRECTIONS.get(i);
-            lines[i] = "To the " + direction + ", ";
+            lines[i] = "To the " + direction + " ";
             RoomPartition partition = getDoor(direction);
             if (partition.isDoor()) {
                 if (partition.isOpen()) {
-                    lines[i] += " is an open door";
+                    lines[i] += "is an open door";
                 } else if (partition.isLocked()) {
-                    lines[i] += " is a locked door";
+                    lines[i] += "is a locked door";
                 } else {
-                    lines[i] += " is a closed door";
+                    lines[i] += "is a closed door";
                 }
             } else if (partition.isOpen()) {
-                lines[i] += " the room continues";
+                lines[i] += "the room continues";
             } else {
-                lines[i] += " is a wall";
+                lines[i] += "is a wall";
             }
         }
 

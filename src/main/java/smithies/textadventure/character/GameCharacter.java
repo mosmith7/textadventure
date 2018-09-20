@@ -10,14 +10,6 @@ import java.util.Optional;
 public interface GameCharacter {
     Optional<RoomName> goDirection(Adverb direction);
 
-    RoomName goNorth();
-
-    RoomName goSouth();
-
-    RoomName goEast();
-
-    RoomName goWest();
-
     void viewInventory();
 
     boolean isInventoryFull();
