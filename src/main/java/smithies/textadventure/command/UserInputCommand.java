@@ -2,6 +2,7 @@ package smithies.textadventure.command;
 
 import smithies.textadventure.character.Player;
 import smithies.textadventure.command.state.*;
+import smithies.textadventure.map.DungeonMap;
 import smithies.textadventure.session.AllRooms;
 
 import java.util.Optional;
@@ -51,7 +52,7 @@ public class UserInputCommand {
 
     }
 
-    public Optional<GameCommandState> toGameCommand(Player player, AllRooms allRooms) {
+    public Optional<GameCommandState> toGameCommand(Player player, DungeonMap map) {
         // Get any cached commands from when a question was asked
         if (verb == null && adverb == null) {
             Optional<Verb> cachedVerb = commandCache.getCachedVerb();
@@ -75,7 +76,7 @@ public class UserInputCommand {
                 questionReturned = true;
             }
         } else if ((verb == null || Verb.GO.equals(verb)) && adverbIsValidDirection(adverb)) {
-            command = new GoDirection(player, adverb, allRooms);
+            command = new GoDirection(player, adverb, map);
         } else if (Verb.WAIT.equals(verb)) {
             command = new Wait();
         } else if (Verb.EXAMINE.equals(verb)) {

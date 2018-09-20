@@ -6,8 +6,8 @@ import smithies.textadventure.character.BaseCharacter;
 import smithies.textadventure.command.Adverb;
 import smithies.textadventure.command.Directions;
 import smithies.textadventure.item.Inventory;
+import smithies.textadventure.map.DungeonMap;
 import smithies.textadventure.rooms.Room;
-import smithies.textadventure.session.AllRooms;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,10 +18,10 @@ public class Misty extends BaseCharacter implements Npc {
 
     private static final Logger LOG = LoggerFactory.getLogger(Misty.class);
 
-    private AllRooms allRooms;
+    private DungeonMap map;
 
-    public Misty(AllRooms allRooms, Room currentRoom) {
-        this.allRooms = allRooms;
+    public Misty(DungeonMap map, Room currentRoom) {
+        this.map = map;
         this.currentRoom = currentRoom;
         this.inventory = new Inventory(1);
     }
@@ -53,7 +53,7 @@ public class Misty extends BaseCharacter implements Npc {
 
         if (directionOptions.size() > 0) {
             goDirection(chooseRandomDirection(directionOptions)).ifPresent(roomName -> {
-                this.currentRoom = allRooms.get(roomName);
+                this.currentRoom = map.get(roomName);
                 LOG.debug("Misty is in: " + roomName);
             });
         }

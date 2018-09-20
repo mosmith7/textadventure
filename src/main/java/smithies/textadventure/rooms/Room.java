@@ -2,9 +2,12 @@ package smithies.textadventure.rooms;
 
 import smithies.textadventure.character.GameCharacter;
 import smithies.textadventure.command.Adverb;
+import smithies.textadventure.command.Directions;
 import smithies.textadventure.command.Noun;
 import smithies.textadventure.interactable.searchable.Interactable;
 import smithies.textadventure.item.Item;
+import smithies.textadventure.rooms.door.Deadend;
+import smithies.textadventure.rooms.door.RoomPartition;
 import smithies.textadventure.ui.DisplayConsoleOutput;
 import smithies.textadventure.ui.DisplayOutput;
 
@@ -13,15 +16,17 @@ import java.util.stream.Collectors;
 
 public abstract class Room {
 
+    // TODO: can we just replace all room objects with a room builder that give the name and sets the doorsByDirection and roomsByDirection maps?
+
     private DisplayOutput output = new DisplayConsoleOutput();
-    private boolean isFirstEntrance = true;
+    private boolean firstEntrance = true;
     private List<Item> items = new ArrayList<>();
     private Map<Item, String> itemPositionDescription = new HashMap<>();
     private List<Interactable> searchables = new ArrayList<>();
+    protected Map<Adverb, RoomPartition> doorsByDirection = new HashMap<>();
+    protected Map<Adverb, RoomName> roomsByDirection = new HashMap<>();
 
     public abstract RoomName getName();
-
-    public abstract String[] getFullDescriptionLines();
 
     public abstract RoomName goNorth();
 
@@ -31,35 +36,74 @@ public abstract class Room {
 
     public abstract RoomName goWest();
 
-    public Optional<RoomName> goDirection(Adverb direction) {
-        RoomName roomName;
-        switch (direction) {
-            case NORTH:
-                roomName = goNorth();
-                break;
-            case EAST:
-                roomName = goEast();
-                break;
-            case SOUTH:
-                roomName = goSouth();
-                break;
-            case WEST:
-                roomName = goWest();
-                break;
-            default:
-                throw new RuntimeException("Invalid direction supplied");
+    public void addRoom(Adverb direction, RoomName room, RoomPartition door) {
+        roomsByDirection.put(direction, room);
+        doorsByDirection.put(direction, door);
+    }
+
+    public RoomPartition getDoor(Adverb direction) {
+        return doorsByDirection.getOrDefault(direction, new Deadend());
+    }
+
+    public RoomName getRoom(Adverb direction) {
+        return roomsByDirection.get(direction);
+    }
+
+    public String[] getFullDescriptionLines() {
+        String[] lines = new String[Directions.ALL_DIRECTIONS.size()];
+        for (int i = 0; i < Directions.ALL_DIRECTIONS.size(); i++) {
+            Adverb direction = Directions.ALL_DIRECTIONS.get(i);
+            lines[i] = "To the " + direction + ", ";
+            RoomPartition partition = getDoor(direction);
+            if (partition.isDoor()) {
+                if (partition.isOpen()) {
+                    lines[i] += " is an open door";
+                } else if (partition.isLocked()) {
+                    lines[i] += " is a locked door";
+                } else {
+                    lines[i] += " is a closed door";
+                }
+            } else if (partition.isOpen()) {
+                lines[i] += " the room continues";
+            } else {
+                lines[i] += " is a wall";
+            }
         }
-        return Optional.ofNullable(roomName);
+
+        return lines;
+    }
+
+    public Optional<RoomName> goDirection(Adverb direction) {
+        RoomName room = null;
+        if (Directions.ALL_DIRECTIONS.contains(direction)) {
+            RoomPartition roomPartition = getDoor(direction);
+            if (roomPartition.isOpen()) {
+                room = getRoom(direction);
+            } else if (roomPartition.isDoor()) {
+                if (roomPartition.isOpen()) {
+                    room = getRoom(direction);
+                } else if (roomPartition.isLocked()) {
+                    room = RoomName.LOCKED_DOOR;
+                } else {
+                    room = RoomName.CLOSED_DOOR;
+                }
+            } else {
+                room = RoomName.DEADEND;
+            }
+        } else {
+            System.out.println("Invalid direction supplied");
+        }
+        return Optional.ofNullable(room);
     }
 
     protected boolean isFirstEntrance() {
-        return isFirstEntrance;
+        return firstEntrance;
     }
 
     public void enter() {
         if (isFirstEntrance()) {
             displayFullDescription();
-            isFirstEntrance = false;
+            firstEntrance = false;
         } else {
             displayName();
         }

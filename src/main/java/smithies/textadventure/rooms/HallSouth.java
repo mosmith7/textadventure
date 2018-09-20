@@ -4,15 +4,13 @@ public class HallSouth extends Room {
 
     private RoomName name = RoomName.HALL_SOUTH;
 
-    @Override
-    public RoomName getName() {
-        return name;
+    public HallSouth() {
+
     }
 
     @Override
-    public String[] getFullDescriptionLines() {
-        return new String[]{"To the north, the hallway continues.", "To the east is a closed door.",
-                "To the south is a closed door.", "To the west is an open door."};
+    public RoomName getName() {
+        return name;
     }
 
     @Override

@@ -7,6 +7,7 @@ import smithies.textadventure.command.*;
 import smithies.textadventure.command.state.ViewInventory;
 import smithies.textadventure.item.Item;
 import smithies.textadventure.item.TennisBall;
+import smithies.textadventure.map.DungeonMap;
 import smithies.textadventure.rooms.Room;
 import smithies.textadventure.rooms.RoomName;
 import smithies.textadventure.interactable.searchable.DogBed;
@@ -20,6 +21,7 @@ import smithies.textadventure.ui.UserTextInputRetriever;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class SessionManager {
 
@@ -28,26 +30,26 @@ public class SessionManager {
     private CommandHandler commandHandler = new CommandHandler();
     private DisplayOutput output = new DisplayConsoleOutput();
 
-    private AllRooms allRooms;
+    private DungeonMap map;
     private Player player;
     private List<Npc> npcs = new ArrayList<>();
 
     public SessionManager() {
+        map = new DungeonMap();
     }
 
     public void startGame() {
         displayStartingMessage();
-        allRooms = new AllRooms();
         distributeItems();
         initialiseSearchables();
         initialiseNpcs();
 
-        player = new Player(allRooms.get(RoomName.HALL_SOUTH));
+        player = new Player(map.get(RoomName.HALL_SOUTH));
         player.enterRoom();
         while(true) {
             String input = inputRetriever.getLine();
             UserInputCommand userCommand = inputParser.parseString(input);
-            userCommand.toGameCommand(player, allRooms).ifPresent(gameCommand -> {
+            userCommand.toGameCommand(player, map).ifPresent(gameCommand -> {
                 commandHandler.setCurrentState(gameCommand);
                 commandHandler.processCommand();
             });
@@ -64,7 +66,7 @@ public class SessionManager {
     }
 
     private void distributeItems() {
-        Room kitchenNorth = allRooms.get(RoomName.KITCHEN_NORTH);
+        Room kitchenNorth = map.get(RoomName.KITCHEN_NORTH);
         TennisBall tennisBall = new TennisBall();
         kitchenNorth.addItem(tennisBall, String.format("Just sitting there on the middle of the floor, unguarded, there is a %s", tennisBall.getName()));
     }
@@ -79,12 +81,12 @@ public class SessionManager {
 
     private void hideItemInSearchable(RoomName roomName, Interactable searchable, Item item, Adverb adverb) {
         searchable.addItem(item, adverb);
-        Room room = allRooms.get(roomName);
+        Room room = map.get(roomName);
         room.addSearchable(searchable);
     }
 
     private void initialiseNpcs() {
-        Misty misty = new Misty(allRooms, allRooms.get(RoomName.LIVING_ROOM));
+        Misty misty = new Misty(map, map.get(RoomName.LIVING_ROOM));
         npcs.add(misty);
     }
 

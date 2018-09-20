@@ -2,6 +2,7 @@ package smithies.textadventure.command.state;
 
 import smithies.textadventure.character.Player;
 import smithies.textadventure.command.Adverb;
+import smithies.textadventure.map.DungeonMap;
 import smithies.textadventure.rooms.RoomName;
 import smithies.textadventure.session.AllRooms;
 import smithies.textadventure.ui.DisplayConsoleOutput;
@@ -12,12 +13,12 @@ public class GoDirection implements GameCommandState {
 
     private Player player;
     private Adverb direction;
-    private AllRooms allRooms;
+    private DungeonMap map;
 
-    public GoDirection(Player player, Adverb direction, AllRooms allRooms) {
+    public GoDirection(Player player, Adverb direction, DungeonMap map) {
         this.player = player;
         this.direction = direction;
-        this.allRooms = allRooms;
+        this.map = map;
     }
 
     @Override
@@ -25,12 +26,12 @@ public class GoDirection implements GameCommandState {
         RoomName roomName = player.goDirection(direction).orElseThrow(() -> {
             return new RuntimeException("Invalid direction supplied");
         });
-        handleRoomName(player, allRooms, roomName);
+        handleRoomName(player, map, roomName);
     }
 
-    private void handleRoomName(Player player, AllRooms allRooms, RoomName roomName) {
+    private void handleRoomName(Player player, DungeonMap map, RoomName roomName) {
         if (roomName.isValidRoom()) {
-            handleValidRoom(player, allRooms, roomName);
+            handleValidRoom(player, map, roomName);
         } else {
             handleInvalidRoom(roomName);
         }
@@ -48,8 +49,8 @@ public class GoDirection implements GameCommandState {
         }
     }
 
-    private void handleValidRoom(Player player, AllRooms allRooms, RoomName roomName) {
-        player.setCurrentRoom(allRooms.get(roomName));
+    private void handleValidRoom(Player player, DungeonMap map, RoomName roomName) {
+        player.setCurrentRoom(map.get(roomName));
         player.enterRoom();
     }
 }
