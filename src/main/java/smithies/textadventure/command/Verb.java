@@ -14,6 +14,7 @@ public enum Verb {
     INVENTORY("inventory"),
     TAKE("take", "grab", "pick up"),
     DROP("drop", "release"),
+    PUT("put", "place", "hide"),
 
     SEARCH("search", "look"),
 

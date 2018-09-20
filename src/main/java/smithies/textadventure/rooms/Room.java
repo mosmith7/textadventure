@@ -1,11 +1,10 @@
 package smithies.textadventure.rooms;
 
-import smithies.textadventure.character.npc.Npc;
+import smithies.textadventure.character.GameCharacter;
 import smithies.textadventure.command.Adverb;
 import smithies.textadventure.command.Noun;
-import smithies.textadventure.item.Item;
 import smithies.textadventure.interactable.searchable.Interactable;
-import smithies.textadventure.character.GameCharacter;
+import smithies.textadventure.item.Item;
 import smithies.textadventure.ui.DisplayConsoleOutput;
 import smithies.textadventure.ui.DisplayOutput;
 

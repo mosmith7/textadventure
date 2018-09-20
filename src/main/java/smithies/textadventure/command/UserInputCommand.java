@@ -123,7 +123,7 @@ public class UserInputCommand {
             if (noun != null) {
                 if (adverb == null) {
                     // Assume climbing up
-                    command = new ClimbDirection(player, Adverb.UP);
+                    command = new ClimbDirection(player, Adverb.UP, noun);
                 } else {
                     if (Adverb.UP.equals(adverb)) {
                         command = new ClimbDirection(player, Adverb.UP, noun);
@@ -138,6 +138,8 @@ public class UserInputCommand {
                 commandCache.displayQuestionAndRetainVerb("What would you like to climb?", verb);
                 questionReturned = true;
             }
+        } else if (Verb.PUT.equals(verb)) {
+            // TODO: This will be tricky. Will need two nouns and adverb. e.g. put tennis ball under bed
         } else if (Verb.EXIT.equals(verb)) {
             command = new Exit();
         }  else if (Verb.FAILED_TO_PARSE.equals(verb)) {

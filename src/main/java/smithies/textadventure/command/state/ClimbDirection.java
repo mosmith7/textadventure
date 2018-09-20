@@ -24,7 +24,9 @@ public class ClimbDirection implements GameCommandState {
     public void run() {
         switch (direction) {
             case UP:
-                player.climbUp(noun);
+                if (noun != null) {
+                    player.climbUp(noun);
+                }
                 break;
             case DOWN:
                 if (noun != null) {
