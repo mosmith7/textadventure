@@ -19,6 +19,8 @@ public class Room {
     private DisplayOutput output = new DisplayConsoleOutput();
 
     private RoomName name;
+    private boolean forbiddenRoom;
+
     private boolean firstEntrance = true;
     private List<Item> items = new ArrayList<>();
     private Map<Item, String> itemPositionDescription = new HashMap<>();
@@ -26,8 +28,9 @@ public class Room {
     protected Map<Adverb, RoomPartition> doorsByDirection = new HashMap<>();
     protected Map<Adverb, RoomName> roomsByDirection = new HashMap<>();
 
-    public Room(RoomName name) {
+    public Room(RoomName name, boolean forbiddenRoom) {
         this.name = name;
+        this.forbiddenRoom = forbiddenRoom;
     }
 
     public RoomName getName() {

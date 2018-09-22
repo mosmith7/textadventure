@@ -9,8 +9,8 @@ public class RoomBuilder {
 
     private Room room;
 
-    public RoomBuilder(RoomName roomName) {
-        room = new Room(roomName);
+    public RoomBuilder(RoomName roomName, boolean forbiddenRoom) {
+        room = new Room(roomName, forbiddenRoom);
         Directions.ALL_DIRECTIONS.forEach(direction -> {
             room.addRoom(direction, RoomName.DEADEND, new Deadend());
         });

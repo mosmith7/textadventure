@@ -2,41 +2,32 @@ package smithies.textadventure.rooms;
 
 public enum RoomName {
 
-    DEADEND(false),
+    DEADEND,
 
     // Rooms downstairs, which dogs are allowed in
-    HALL_SOUTH(true),
-    HALL_MIDDLE(true),
-    HALL_NORTH(true),
-    KITCHEN_SOUTH(true),
-    KITCHEN_NORTH(true),
-    LIVING_ROOM(true),
-    STUDY(true),
-    TOILET(true),
+    HALL_SOUTH,
+    HALL_MIDDLE,
+    HALL_NORTH,
+    KITCHEN_SOUTH,
+    KITCHEN_NORTH,
+    LIVING_ROOM,
+    STUDY,
+    TOILET,
 
     // Rooms upstairs, which dogs are not allowed in
-    STAIRS_SOUTH(false),
-    STAIRS_NORTH(false),
-    UPSTAIRS_LANDING_WEST(false),
-    UPSTAIRS_LANDING_EAST(false),
-    BATHROOM(false),
-    BEDROOM_ONE(false),
-    BEDROOM_TWO(false),
-    BEDROOM_THREE(false),
-    BEDROOM_FOUR(false),
+    STAIRS_SOUTH,
+    STAIRS_NORTH,
+    UPSTAIRS_LANDING_WEST,
+    UPSTAIRS_LANDING_EAST,
+    BATHROOM,
+    BEDROOM_ONE,
+    BEDROOM_TWO,
+    BEDROOM_THREE,
+    BEDROOM_FOUR,
 
     // 'Rooms' outside
-    BACK_GARDEN(false),
-    FRONT_GARDEN(false),
+    BACK_GARDEN,
+    FRONT_GARDEN,
     ;
 
-    private boolean forbiddenRoom;
-
-    RoomName(boolean forbiddenRoom) {
-        this.forbiddenRoom = forbiddenRoom;
-    }
-
-    public boolean isForbiddenRoom() {
-        return forbiddenRoom;
-    }
 }
