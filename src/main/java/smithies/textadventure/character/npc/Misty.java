@@ -43,13 +43,10 @@ public class Misty extends BaseCharacter implements Npc {
         // But if she is in a room with a toy, she will try to take it
         // She should also have a tendancy to circle around the house
 
-        List<Adverb> directionOptions = Directions.ALL_DIRECTIONS.stream().filter(d -> {
-            boolean canMoveInDirection = false;
-            if (currentRoom.goDirection(d).isPresent()) {
-                canMoveInDirection = currentRoom.goDirection(d).get().isValidRoom();
-            }
-            return canMoveInDirection;
-        }).collect(Collectors.toList());
+        List<Adverb> directionOptions = Directions.ALL_DIRECTIONS
+                .stream()
+                .filter(d ->  currentRoom.goDirection(d).isSuccessful())
+                .collect(Collectors.toList());
 
         if (directionOptions.size() > 0) {
             goDirection(chooseRandomDirection(directionOptions)).ifPresent(roomName -> {

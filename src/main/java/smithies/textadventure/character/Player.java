@@ -6,8 +6,7 @@ import smithies.textadventure.interactable.climbable.ClimbInteraction;
 import smithies.textadventure.interactable.climbable.ClimbResult;
 import smithies.textadventure.item.Inventory;
 import smithies.textadventure.item.Item;
-import smithies.textadventure.rooms.Room;
-import smithies.textadventure.rooms.RoomName;
+import smithies.textadventure.rooms.*;
 import smithies.textadventure.interactable.searchable.Interactable;
 import smithies.textadventure.ui.DisplayConsoleOutput;
 import smithies.textadventure.ui.DisplayOutput;
@@ -31,7 +30,20 @@ public class Player extends BaseCharacter {
     @Override
     public Optional<RoomName> goDirection(Adverb direction) {
         if (isOnAnyClimbable()) climbDown();
-        return this.currentRoom.goDirection(direction);
+        GoDirectionResponse response = this.currentRoom.goDirection(direction);
+        if (response.isSuccessful()) {
+            return Optional.of(((GoDirectionSuccess) response).getRoomName());
+        } else {
+            GoDirectionFailure failure = (GoDirectionFailure) response;
+            if (GoDirectionResponse.CLOSED_DOOR.equals(failure.getFailureReason())) {
+                output.displayClosedDoorResponse();
+            } else if (GoDirectionResponse.LOCKED_DOOR.equals(failure.getFailureReason())) {
+                output.displayClosedDoorResponse();
+            } else {
+                output.displayTextLine("You walk over to the wall and curl up in a ball");
+            }
+        }
+        return Optional.empty();
     }
 
     public void look() {

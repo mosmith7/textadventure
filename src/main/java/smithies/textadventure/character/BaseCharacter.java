@@ -3,6 +3,8 @@ package smithies.textadventure.character;
 import smithies.textadventure.command.Adverb;
 import smithies.textadventure.command.Noun;
 import smithies.textadventure.item.Inventory;
+import smithies.textadventure.rooms.GoDirectionResponse;
+import smithies.textadventure.rooms.GoDirectionSuccess;
 import smithies.textadventure.rooms.Room;
 import smithies.textadventure.rooms.RoomName;
 
@@ -15,7 +17,11 @@ public abstract class BaseCharacter implements GameCharacter {
 
     @Override
     public Optional<RoomName> goDirection(Adverb direction) {
-        return this.currentRoom.goDirection(direction);
+        GoDirectionResponse response = this.currentRoom.goDirection(direction);
+        if (response.isSuccessful()) {
+            return Optional.of(((GoDirectionSuccess) response).getRoomName());
+        }
+        return Optional.empty();
     }
 
     @Override

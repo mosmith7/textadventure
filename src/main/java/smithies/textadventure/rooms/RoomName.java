@@ -3,10 +3,6 @@ package smithies.textadventure.rooms;
 public enum RoomName {
 
     DEADEND(false, false),
-    CLOSED_PUSH_DOOR(false, false),
-    CLOSED_DOOR(false, false),
-    CLOSED_PULL_DOOR(false, false),
-    LOCKED_DOOR(false, false),
 
     // Rooms downstairs, which dogs are allowed in
     HALL_SOUTH(true, true),
@@ -28,6 +24,10 @@ public enum RoomName {
     BEDROOM_TWO(true, false),
     BEDROOM_THREE(true, false),
     BEDROOM_FOUR(true, false),
+
+    // 'Rooms' outside
+    BACK_GARDEN(true, false),
+    FRONT_GARDEN(true, false),
     ;
 
     private boolean validRoom;

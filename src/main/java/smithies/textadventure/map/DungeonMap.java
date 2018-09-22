@@ -13,46 +13,45 @@ public class DungeonMap {
 
     public DungeonMap() {
 
-        HallSouth hallSouth = new HallSouth();
-        hallSouth.addRoom(Adverb.NORTH, RoomName.HALL_MIDDLE, new NoDoor());
-        hallSouth.addRoom(Adverb.EAST, RoomName.STUDY, new ClosedDoor(true));
-        hallSouth.addRoom(Adverb.SOUTH, RoomName.LOCKED_DOOR, new LockedDoor(false));
-        hallSouth.addRoom(Adverb.WEST, RoomName.KITCHEN_SOUTH, new OpenDoor(false));
+        Room hallSouth = new RoomBuilder(RoomName.HALL_SOUTH)
+                .addNorthRoom(RoomName.HALL_MIDDLE, new NoDoor())
+                .addEastRoom(RoomName.STUDY, new ClosedDoor(true))
+                .addSouthRoom(RoomName.FRONT_GARDEN, new LockedDoor(false))
+                .addWestRoom(RoomName.KITCHEN_SOUTH, new OpenDoor(false))
+                .build();
         rooms.add(hallSouth);
 
-        HallMiddle hallMiddle = new HallMiddle();
-        hallMiddle.addRoom(Adverb.NORTH, RoomName.HALL_NORTH, new NoDoor());
-        hallMiddle.addRoom(Adverb.EAST, RoomName.LIVING_ROOM, new OpenDoor(true));
-        hallMiddle.addRoom(Adverb.SOUTH, RoomName.HALL_SOUTH, new NoDoor());
-        hallMiddle.addRoom(Adverb.WEST, RoomName.DEADEND, new Deadend());
+        Room hallMiddle = new RoomBuilder(RoomName.HALL_MIDDLE)
+                .addNorthRoom(RoomName.HALL_NORTH, new NoDoor())
+                .addEastRoom(RoomName.LIVING_ROOM, new OpenDoor(true))
+                .addSouthRoom(RoomName.HALL_SOUTH, new NoDoor())
+                .build();
         rooms.add(hallMiddle);
 
-        HallNorth hallNorth = new HallNorth();
-        hallNorth.addRoom(Adverb.NORTH, RoomName.TOILET, new ClosedDoor(true));
-        hallNorth.addRoom(Adverb.EAST, RoomName.DEADEND, new Deadend());
-        hallNorth.addRoom(Adverb.SOUTH, RoomName.HALL_MIDDLE, new NoDoor());
-        hallNorth.addRoom(Adverb.WEST, RoomName.KITCHEN_NORTH, new OpenDoor(false));
+        Room hallNorth = new RoomBuilder(RoomName.HALL_NORTH)
+                .addNorthRoom(RoomName.TOILET, new ClosedDoor(true))
+                .addSouthRoom(RoomName.HALL_MIDDLE, new NoDoor())
+                .addWestRoom(RoomName.KITCHEN_NORTH, new OpenDoor(false))
+                .build();
         rooms.add(hallNorth);
 
-        KitchenNorth kitchenNorth = new KitchenNorth();
-        kitchenNorth.addRoom(Adverb.NORTH, RoomName.DEADEND, new Deadend());
-        kitchenNorth.addRoom(Adverb.EAST, RoomName.HALL_NORTH, new OpenDoor(true));
-        kitchenNorth.addRoom(Adverb.SOUTH, RoomName.KITCHEN_SOUTH, new NoDoor());
-        kitchenNorth.addRoom(Adverb.WEST, RoomName.DEADEND, new LockedDoor(false));
+        Room kitchenNorth = new RoomBuilder(RoomName.KITCHEN_NORTH)
+                .addEastRoom(RoomName.HALL_NORTH, new OpenDoor(true))
+                .addSouthRoom(RoomName.KITCHEN_SOUTH, new NoDoor())
+                .addWestRoom(RoomName.BACK_GARDEN, new LockedDoor(false))
+                .build();
         rooms.add(kitchenNorth);
 
-        KitchenSouth kitchenSouth = new KitchenSouth();
-        kitchenSouth.addRoom(Adverb.NORTH, RoomName.KITCHEN_NORTH, new NoDoor());
-        kitchenSouth.addRoom(Adverb.EAST, RoomName.HALL_SOUTH, new OpenDoor(true));
-        kitchenSouth.addRoom(Adverb.SOUTH, RoomName.DEADEND, new Deadend());
-        kitchenSouth.addRoom(Adverb.WEST, RoomName.DEADEND, new Deadend());
+        Room kitchenSouth = new RoomBuilder(RoomName.KITCHEN_SOUTH)
+                .addNorthRoom(RoomName.KITCHEN_NORTH, new NoDoor())
+                .addEastRoom(RoomName.HALL_SOUTH, new OpenDoor(true))
+                .build();
         rooms.add(kitchenSouth);
 
-        LivingRoom livingRoom = new LivingRoom();
-        livingRoom.addRoom(Adverb.NORTH, RoomName.DEADEND, new Deadend());
-        livingRoom.addRoom(Adverb.EAST, RoomName.DEADEND, new Deadend());
-        livingRoom.addRoom(Adverb.SOUTH, RoomName.LOCKED_DOOR, new LockedDoor(false));
-        livingRoom.addRoom(Adverb.WEST, RoomName.HALL_MIDDLE, new OpenDoor(true));
+        Room livingRoom = new RoomBuilder(RoomName.LIVING_ROOM)
+                .addSouthRoom(RoomName.BACK_GARDEN, new LockedDoor(false))
+                .addWestRoom(RoomName.HALL_MIDDLE, new OpenDoor(true))
+                .build();
         rooms.add(livingRoom);
     }
 

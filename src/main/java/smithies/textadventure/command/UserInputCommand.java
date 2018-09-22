@@ -3,7 +3,6 @@ package smithies.textadventure.command;
 import smithies.textadventure.character.Player;
 import smithies.textadventure.command.state.*;
 import smithies.textadventure.map.DungeonMap;
-import smithies.textadventure.session.AllRooms;
 
 import java.util.Optional;
 import java.util.Random;
