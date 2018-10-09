@@ -3,30 +3,31 @@ package smithies.textadventure.session;
 import smithies.textadventure.character.Player;
 import smithies.textadventure.character.npc.Misty;
 import smithies.textadventure.character.npc.Npc;
-import smithies.textadventure.command.*;
+import smithies.textadventure.command.Adverb;
+import smithies.textadventure.command.CommandHandler;
+import smithies.textadventure.command.Noun;
+import smithies.textadventure.command.UserInputCommand;
 import smithies.textadventure.command.state.ViewInventory;
+import smithies.textadventure.interactable.searchable.DogBed;
+import smithies.textadventure.interactable.searchable.Interactable;
+import smithies.textadventure.interactable.searchable.Sideboard;
 import smithies.textadventure.item.Item;
 import smithies.textadventure.item.TennisBall;
 import smithies.textadventure.map.DungeonMap;
 import smithies.textadventure.rooms.Room;
 import smithies.textadventure.rooms.RoomName;
-import smithies.textadventure.interactable.searchable.DogBed;
-import smithies.textadventure.interactable.searchable.Interactable;
-import smithies.textadventure.interactable.searchable.Sideboard;
 import smithies.textadventure.ui.DisplayConsoleOutput;
 import smithies.textadventure.ui.DisplayOutput;
 import smithies.textadventure.ui.UserTextInputParser;
 import smithies.textadventure.ui.UserTextInputRetriever;
 
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class SessionManager {
 
     private UserTextInputRetriever inputRetriever = new UserTextInputRetriever();
-    private UserTextInputParser inputParser = new UserTextInputParser();
+    private UserTextInputParser inputParser;
     private CommandHandler commandHandler = new CommandHandler();
     private DisplayOutput output = new DisplayConsoleOutput();
 
@@ -36,6 +37,7 @@ public class SessionManager {
 
     public SessionManager() {
         map = new DungeonMap();
+        inputParser = new UserTextInputParser(map);
     }
 
     public void startGame() {

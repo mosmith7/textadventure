@@ -38,8 +38,8 @@ public class DungeonMap {
 
     private void buildDownstairsRooms() {
         Room hallSouth = new RoomBuilder(RoomName.HALL_SOUTH, false)
-                .addNorthRoom(RoomName.HALL_MIDDLE, new NoDoor())
-                .addNorthWestRoom(RoomName.STAIRS_SOUTH, new Stairs())
+                .addNorthEastRoom(RoomName.HALL_MIDDLE, new NoDoor())
+                .addNorthRoom(RoomName.STAIRS_SOUTH, new Stairs())
                 .addEastRoom(RoomName.STUDY, new ClosedDoor(true))
                 .addSouthRoom(RoomName.FRONT_GARDEN, new LockedDoor(false))
                 .addWestRoom(RoomName.KITCHEN_SOUTH, new OpenDoor(false))

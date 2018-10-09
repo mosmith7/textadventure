@@ -51,7 +51,7 @@ public class Misty extends BaseCharacter implements Npc {
         // Don't let Misty go upstairs!
 
         if (directionOptions.size() > 0) {
-            goDirection(chooseRandomDirection(directionOptions)).ifPresent(roomName -> {
+            getRoomInDirection(chooseRandomDirection(directionOptions)).ifPresent(roomName -> {
                 this.currentRoom = map.get(roomName);
                 LOG.debug("Misty is in: " + roomName);
             });

@@ -1,12 +1,19 @@
 package smithies.textadventure.ui;
 
 import smithies.textadventure.command.*;
+import smithies.textadventure.map.DungeonMap;
 
 import java.util.Optional;
 
 public class UserTextInputParser {
 
     private CommandCache commandCache = new CommandCache();
+
+    private DungeonMap map;
+
+    public UserTextInputParser(DungeonMap map) {
+        this.map = map;
+    }
 
     public UserInputCommand parseString(String rawInput) {
 
@@ -17,17 +24,17 @@ public class UserTextInputParser {
         Optional<Noun> optionalNoun = findNoun(input);
 
         if (optionalVerb.isPresent() && optionalAdverb.isPresent() && optionalNoun.isPresent()) {
-            return new UserInputCommand(commandCache, optionalVerb.get(), optionalAdverb.get(), optionalNoun.get());
+            return new UserInputCommand(commandCache, map, optionalVerb.get(), optionalAdverb.get(), optionalNoun.get());
         } else if (optionalVerb.isPresent() && optionalAdverb.isPresent()) {
-            return new UserInputCommand(commandCache, optionalVerb.get(), optionalAdverb.get());
+            return new UserInputCommand(commandCache, map, optionalVerb.get(), optionalAdverb.get());
         } else if (optionalVerb.isPresent() && optionalNoun.isPresent()) {
-            return new UserInputCommand(commandCache, optionalVerb.get(), optionalNoun.get());
+            return new UserInputCommand(commandCache, map, optionalVerb.get(), optionalNoun.get());
         } else if (optionalVerb.isPresent()) {
-            return new UserInputCommand(commandCache, optionalVerb.get());
+            return new UserInputCommand(commandCache, map, optionalVerb.get());
         } else if (optionalAdverb.isPresent()) {
-            return new UserInputCommand(commandCache, optionalAdverb.get());
+            return new UserInputCommand(commandCache, map, optionalAdverb.get());
         } else if (optionalNoun.isPresent()) {
-            return new UserInputCommand(commandCache, optionalNoun.get());
+            return new UserInputCommand(commandCache, map, optionalNoun.get());
         }
 
         return UserInputCommand.empty(commandCache);

@@ -11,35 +11,38 @@ public class UserInputCommand {
 
     private CommandCache commandCache;
 
+    private DungeonMap map;
+
     private Verb verb;
     private Adverb adverb;
     private Noun noun;
 
-    public UserInputCommand(CommandCache commandCache, Verb verb, Adverb adverb, Noun noun) {
+    public UserInputCommand(CommandCache commandCache, DungeonMap map, Verb verb, Adverb adverb, Noun noun) {
         this.commandCache = commandCache;
+        this.map = map;
         this.verb = verb;
         this.adverb = adverb;
         this.noun = noun;
     }
 
-    public UserInputCommand(CommandCache commandCache, Verb verb, Adverb adverb) {
-        this(commandCache, verb, adverb, null);
+    public UserInputCommand(CommandCache commandCache, DungeonMap map, Verb verb, Adverb adverb) {
+        this(commandCache, map, verb, adverb, null);
     }
 
-    public UserInputCommand(CommandCache commandCache, Verb verb, Noun noun) {
-        this(commandCache, verb, null, noun);
+    public UserInputCommand(CommandCache commandCache, DungeonMap map, Verb verb, Noun noun) {
+        this(commandCache, map, verb, null, noun);
     }
 
-    public UserInputCommand(CommandCache commandCache, Verb verb) {
-        this(commandCache, verb, null, null);
+    public UserInputCommand(CommandCache commandCache, DungeonMap map, Verb verb) {
+        this(commandCache, map, verb, null, null);
     }
 
-    public UserInputCommand(CommandCache commandCache, Adverb adverb) {
-        this(commandCache, null, adverb, null);
+    public UserInputCommand(CommandCache commandCache, DungeonMap map, Adverb adverb) {
+        this(commandCache, map, null, adverb, null);
     }
 
-    public UserInputCommand(CommandCache commandCache, Noun noun) {
-        this(commandCache, null, null, noun);
+    public UserInputCommand(CommandCache commandCache, DungeonMap map, Noun noun) {
+        this(commandCache, map, null, null, noun);
     }
 
     public static UserInputCommand empty(CommandCache commandCache) {
@@ -124,12 +127,12 @@ public class UserInputCommand {
             if (Noun.STAIRS == noun) {
                 if (adverb == null) {
                     // Assume climbing up
-                    command = new ClimbStairs(player, Adverb.UP, Adverb.NORTH, Adverb.SOUTH);
+                    command = new ClimbStairs(player, map, Adverb.UP, Adverb.NORTH, Adverb.SOUTH);
                 } else {
                     if (Adverb.UP.equals(adverb)) {
-                        command = new ClimbStairs(player, Adverb.UP, Adverb.NORTH, Adverb.SOUTH);
+                        command = new ClimbStairs(player, map, Adverb.UP, Adverb.NORTH, Adverb.SOUTH);
                     } else if (Adverb.DOWN.equals(adverb)) {
-                        command = new ClimbStairs(player, Adverb.DOWN, Adverb.NORTH, Adverb.SOUTH);
+                        command = new ClimbStairs(player, map, Adverb.DOWN, Adverb.NORTH, Adverb.SOUTH);
                     }
                 }
             } else {
