@@ -14,9 +14,11 @@ public enum RoomName {
     STUDY,
     TOILET,
 
-    // Rooms upstairs, which dogs are not allowed in
+    // Stairs
     STAIRS_SOUTH,
     STAIRS_NORTH,
+
+    // Rooms upstairs, which dogs are not allowed in
     UPSTAIRS_LANDING_WEST,
     UPSTAIRS_LANDING_EAST,
     BATHROOM,

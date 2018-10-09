@@ -48,6 +48,8 @@ public class Misty extends BaseCharacter implements Npc {
                 .filter(d ->  currentRoom.goDirection(d).isSuccessful())
                 .collect(Collectors.toList());
 
+        // Don't let Misty go upstairs!
+
         if (directionOptions.size() > 0) {
             goDirection(chooseRandomDirection(directionOptions)).ifPresent(roomName -> {
                 this.currentRoom = map.get(roomName);

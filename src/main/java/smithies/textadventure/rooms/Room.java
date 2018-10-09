@@ -6,8 +6,10 @@ import smithies.textadventure.command.Directions;
 import smithies.textadventure.command.Noun;
 import smithies.textadventure.interactable.searchable.Interactable;
 import smithies.textadventure.item.Item;
-import smithies.textadventure.rooms.door.Deadend;
-import smithies.textadventure.rooms.door.RoomPartition;
+import smithies.textadventure.rooms.partition.Deadend;
+import smithies.textadventure.rooms.partition.Door;
+import smithies.textadventure.rooms.partition.RoomPartition;
+import smithies.textadventure.rooms.partition.Stairs;
 import smithies.textadventure.ui.DisplayConsoleOutput;
 import smithies.textadventure.ui.DisplayOutput;
 
@@ -25,7 +27,7 @@ public class Room {
     private List<Item> items = new ArrayList<>();
     private Map<Item, String> itemPositionDescription = new HashMap<>();
     private List<Interactable> searchables = new ArrayList<>();
-    protected Map<Adverb, RoomPartition> doorsByDirection = new HashMap<>();
+    protected Map<Adverb, RoomPartition> partitionByDirection = new HashMap<>();
     protected Map<Adverb, RoomName> roomsByDirection = new HashMap<>();
 
     public Room(RoomName name, boolean forbiddenRoom) {
@@ -39,11 +41,11 @@ public class Room {
 
     public void addRoom(Adverb direction, RoomName room, RoomPartition door) {
         roomsByDirection.put(direction, room);
-        doorsByDirection.put(direction, door);
+        partitionByDirection.put(direction, door);
     }
 
-    public RoomPartition getDoor(Adverb direction) {
-        return doorsByDirection.getOrDefault(direction, new Deadend());
+    public RoomPartition getPartition(Adverb direction) {
+        return partitionByDirection.getOrDefault(direction, new Deadend());
     }
 
     public RoomName getRoom(Adverb direction) {
@@ -51,38 +53,63 @@ public class Room {
     }
 
     public String[] getFullDescriptionLines() {
-        String[] lines = new String[Directions.ALL_DIRECTIONS.size()];
-        for (int i = 0; i < Directions.ALL_DIRECTIONS.size(); i++) {
-            Adverb direction = Directions.ALL_DIRECTIONS.get(i);
-            lines[i] = "To the " + direction + " ";
-            RoomPartition partition = getDoor(direction);
-            if (partition.isDoor()) {
-                if (partition.isOpen()) {
-                    lines[i] += "is an open door";
-                } else if (partition.isLocked()) {
-                    lines[i] += "is a locked door";
+        List<String> lines = new ArrayList<>();
+        for (int i = 0; i < Directions.MAIN_COMPASS_DIRECTIONS.size(); i++) {
+            Adverb direction = Directions.MAIN_COMPASS_DIRECTIONS.get(i);
+            String prefix = "To the " + direction + " ";
+            RoomPartition partition = getPartition(direction);
+            if (partition instanceof Door) {
+                Door door = (Door) partition;
+                if (door.isOpen()) {
+                    lines.add(prefix + "is an open door");
+                } else if (door.isLocked()) {
+                    lines.add(prefix + "is a locked door");
                 } else {
-                    lines[i] += "is a closed door";
+                    lines.add(prefix + "is a closed door");
                 }
+            } else if (partition instanceof Stairs) {
+                lines.add(prefix + "are stairs");
             } else if (partition.isOpen()) {
-                lines[i] += "the room continues";
+                lines.add(prefix + "the room continues");
             } else {
-                lines[i] += "is a wall";
+                lines.add(prefix + "is a wall");
+            }
+        }
+        for (int i = 0; i < Directions.MINOR_COMPASS_DIRECTIONS.size(); i++) {
+            Adverb direction = Directions.MINOR_COMPASS_DIRECTIONS.get(i);
+            String prefix = "To the " + direction + " ";
+            RoomPartition partition = getPartition(direction);
+            if (partition instanceof Door) {
+                Door door = (Door) partition;
+                if (door.isOpen()) {
+                    lines.add(prefix + "is an open door");
+                } else if (door.isLocked()) {
+                    lines.add(prefix + "is a locked door");
+                } else {
+                    lines.add(prefix + "is a closed door");
+                }
+            } else if (partition instanceof Stairs) {
+                lines.add(prefix + "are stairs");
+            } else if (partition.isOpen()) {
+                lines.add(prefix + "the room continues");
+            } else {
+                // Don't bother listing
             }
         }
 
-        return lines;
+        return lines.toArray(new String[lines.size()]);
     }
 
     public GoDirectionResponse goDirection(Adverb direction) {
         if (Directions.ALL_DIRECTIONS.contains(direction)) {
-            RoomPartition roomPartition = getDoor(direction);
+            RoomPartition roomPartition = getPartition(direction);
             if (roomPartition.isOpen()) {
                 return new GoDirectionSuccess(getRoom(direction));
-            } else if (roomPartition.isDoor()) {
+            } else if (roomPartition instanceof Door) {
+                Door door = (Door) roomPartition;
                 if (roomPartition.isOpen()) {
                     return new GoDirectionSuccess(getRoom(direction));
-                } else if (roomPartition.isLocked()) {
+                } else if (door.isLocked()) {
                     return new GoDirectionFailure(GoDirectionResponse.LOCKED_DOOR);
                 } else {
                     return new GoDirectionFailure(GoDirectionResponse.CLOSED_DOOR);

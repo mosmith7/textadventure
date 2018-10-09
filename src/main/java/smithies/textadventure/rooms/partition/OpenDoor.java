@@ -1,21 +1,16 @@
-package smithies.textadventure.rooms.door;
+package smithies.textadventure.rooms.partition;
 
-public class ClosedDoor implements RoomPartition {
+public class OpenDoor implements Door {
 
     private boolean pushable;
 
-    public ClosedDoor(boolean pushable) {
+    public OpenDoor(boolean pushable) {
         this.pushable = pushable;
     }
 
     @Override
-    public boolean isDoor() {
-        return true;
-    }
-
-    @Override
     public boolean isOpen() {
-        return false;
+        return true;
     }
 
     @Override

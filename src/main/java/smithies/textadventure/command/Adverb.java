@@ -5,10 +5,14 @@ import java.util.List;
 
 public enum Adverb {
 
-    NORTH("north"),
-    SOUTH("south"),
-    EAST("east"),
-    WEST("west"),
+    NORTH("north", "n"),
+    SOUTH("south", "s"),
+    EAST("east", "e"),
+    WEST("west", "w"),
+    NORTH_EAST("northeast", "north-east", "ne"),
+    SOUTH_EAST("southeast", "south-east", "se"),
+    NORTH_WEST("northwest", "north-west", "nw"),
+    SOUTH_WEST("southwest", "south-west", "sw"),
 
     UP("up"),
     DOWN("down"),

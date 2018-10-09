@@ -120,23 +120,38 @@ public class UserInputCommand {
         }  else if (Verb.SCRATCH.equals(verb)) {
             command = new Scratch(noun);
         } else if (Verb.CLIMB.equals(verb)) {
-            if (noun != null) {
+            // Deal with climbing stairs
+            if (Noun.STAIRS == noun) {
                 if (adverb == null) {
                     // Assume climbing up
-                    command = new ClimbDirection(player, Adverb.UP, noun);
+                    command = new ClimbStairs(player, Adverb.UP, Adverb.NORTH, Adverb.SOUTH);
                 } else {
                     if (Adverb.UP.equals(adverb)) {
-                        command = new ClimbDirection(player, Adverb.UP, noun);
+                        command = new ClimbStairs(player, Adverb.UP, Adverb.NORTH, Adverb.SOUTH);
                     } else if (Adverb.DOWN.equals(adverb)) {
-                        command = new ClimbDirection(player, Adverb.DOWN, noun);
+                        command = new ClimbStairs(player, Adverb.DOWN, Adverb.NORTH, Adverb.SOUTH);
                     }
                 }
-            } else if (Adverb.UP.equals(adverb) || Adverb.DOWN.equals(adverb)) {
-                commandCache.displayQuestionAndRetainVerbAndAdverb("What would you like to climb " + adverb.toString().toLowerCase() + "?", verb, adverb);
-                questionReturned = true;
             } else {
-                commandCache.displayQuestionAndRetainVerb("What would you like to climb?", verb);
-                questionReturned = true;
+                // Deal with climbing an object
+                if (noun != null) {
+                    if (adverb == null) {
+                        // Assume climbing up
+                        command = new ClimbObject(player, Adverb.UP, noun);
+                    } else {
+                        if (Adverb.UP.equals(adverb)) {
+                            command = new ClimbObject(player, Adverb.UP, noun);
+                        } else if (Adverb.DOWN.equals(adverb)) {
+                            command = new ClimbObject(player, Adverb.DOWN, noun);
+                        }
+                    }
+                } else if (Adverb.UP.equals(adverb) || Adverb.DOWN.equals(adverb)) {
+                    commandCache.displayQuestionAndRetainVerbAndAdverb("What would you like to climb " + adverb.toString().toLowerCase() + "?", verb, adverb);
+                    questionReturned = true;
+                } else {
+                    commandCache.displayQuestionAndRetainVerb("What would you like to climb?", verb);
+                    questionReturned = true;
+                }
             }
         } else if (Verb.PUT.equals(verb)) {
             // TODO: This will be tricky. Will need two nouns and adverb. e.g. put tennis ball under bed
@@ -173,10 +188,7 @@ public class UserInputCommand {
     }
 
     private boolean adverbIsValidDirection(Adverb adverb) {
-        return Adverb.NORTH.equals(adverb) ||
-                Adverb.SOUTH.equals(adverb) ||
-                Adverb.EAST.equals(adverb) ||
-                Adverb.WEST.equals(adverb);
+        return Directions.ALL_DIRECTIONS.contains(adverb);
     }
 
     private boolean adverbIsValidSearch(Adverb adverb) {

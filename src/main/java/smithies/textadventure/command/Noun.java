@@ -5,6 +5,8 @@ import java.util.List;
 
 public enum Noun {
 
+    STAIRS("stairs"),
+
     TENNIS_BALL("tennis ball", "ball"),
 
     SIDEBOARD("sideboard"),

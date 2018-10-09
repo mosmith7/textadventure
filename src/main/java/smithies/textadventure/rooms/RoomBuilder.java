@@ -2,8 +2,8 @@ package smithies.textadventure.rooms;
 
 import smithies.textadventure.command.Adverb;
 import smithies.textadventure.command.Directions;
-import smithies.textadventure.rooms.door.Deadend;
-import smithies.textadventure.rooms.door.RoomPartition;
+import smithies.textadventure.rooms.partition.Deadend;
+import smithies.textadventure.rooms.partition.RoomPartition;
 
 public class RoomBuilder {
 
@@ -17,22 +17,39 @@ public class RoomBuilder {
     }
 
     public RoomBuilder addNorthRoom(RoomName room, RoomPartition partition) {
-        this.room.addRoom(Adverb.NORTH, room, partition);
-        return this;
+        return goDirection(Adverb.NORTH, room, partition);
     }
 
     public RoomBuilder addEastRoom(RoomName room, RoomPartition partition) {
-        this.room.addRoom(Adverb.EAST, room, partition);
-        return this;
+        return goDirection(Adverb.EAST, room, partition);
     }
 
     public RoomBuilder addSouthRoom(RoomName room, RoomPartition partition) {
-        this.room.addRoom(Adverb.SOUTH, room, partition);
-        return this;
+        return goDirection(Adverb.SOUTH, room, partition);
     }
 
     public RoomBuilder addWestRoom(RoomName room, RoomPartition partition) {
-        this.room.addRoom(Adverb.WEST, room, partition);
+        return goDirection(Adverb.WEST, room, partition);
+    }
+
+    public RoomBuilder addNorthEastRoom(RoomName room, RoomPartition partition) {
+        return goDirection(Adverb.NORTH_EAST, room, partition);
+    }
+
+    public RoomBuilder addNorthWestRoom(RoomName room, RoomPartition partition) {
+        return goDirection(Adverb.NORTH_WEST, room, partition);
+    }
+
+    public RoomBuilder addSouthEast(RoomName room, RoomPartition partition) {
+        return goDirection(Adverb.SOUTH_EAST, room, partition);
+    }
+
+    public RoomBuilder addSouthWest(RoomName room, RoomPartition partition) {
+        return goDirection(Adverb.SOUTH_WEST, room, partition);
+    }
+
+    private RoomBuilder goDirection(Adverb adverb, RoomName room, RoomPartition partition) {
+        this.room.addRoom(adverb, room, partition);
         return this;
     }
 

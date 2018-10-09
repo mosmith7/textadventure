@@ -4,17 +4,17 @@ import smithies.textadventure.character.Player;
 import smithies.textadventure.command.Adverb;
 import smithies.textadventure.command.Noun;
 
-public class ClimbDirection implements GameCommandState {
+public class ClimbObject implements GameCommandState {
 
     private Player player;
     private Adverb direction;
     private Noun noun;
 
-    public ClimbDirection(Player player, Adverb direction) {
+    public ClimbObject(Player player, Adverb direction) {
        this(player, direction, null);
     }
 
-    public ClimbDirection(Player player, Adverb direction, Noun noun) {
+    public ClimbObject(Player player, Adverb direction, Noun noun) {
         this.player = player;
         this.direction = direction;
         this.noun = noun;
