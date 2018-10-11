@@ -39,6 +39,14 @@ public class Room {
         return name;
     }
 
+    public boolean isForbiddenRoom() {
+        return forbiddenRoom;
+    }
+
+    public boolean isAllowedRoom() {
+        return !isForbiddenRoom();
+    }
+
     public void addRoom(Adverb direction, RoomName room, RoomPartition door) {
         roomsByDirection.put(direction, room);
         partitionByDirection.put(direction, door);

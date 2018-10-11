@@ -8,9 +8,11 @@ import smithies.textadventure.command.Directions;
 import smithies.textadventure.item.Inventory;
 import smithies.textadventure.map.DungeonMap;
 import smithies.textadventure.rooms.Room;
+import smithies.textadventure.rooms.RoomName;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
 
@@ -43,19 +45,7 @@ public class Misty extends BaseCharacter implements Npc {
         // But if she is in a room with a toy, she will try to take it
         // She should also have a tendancy to circle around the house
 
-        List<Adverb> directionOptions = Directions.ALL_DIRECTIONS
-                .stream()
-                .filter(d ->  currentRoom.goDirection(d).isSuccessful())
-                .collect(Collectors.toList());
-
-        // Don't let Misty go upstairs!
-
-        if (directionOptions.size() > 0) {
-            getRoomInDirection(chooseRandomDirection(directionOptions)).ifPresent(roomName -> {
-                this.currentRoom = map.get(roomName);
-                LOG.debug("Misty is in: " + roomName);
-            });
-        }
+        moveToRandomRoom();
 
         if (currentRoom.hasItem() && !isInventoryFull()) {
             currentRoom.takeItem(this, currentRoom.peekItem()).ifPresent(item -> {
@@ -65,9 +55,30 @@ public class Misty extends BaseCharacter implements Npc {
         }
     }
 
-    private Adverb chooseRandomDirection(List<Adverb> directions) {
-        int options = directions.size();
+    private void moveToRandomRoom() {
+        Room room = chooseRandomValidRoom();
+        this.currentRoom = room;
+        LOG.debug("Misty is in: " + room.getName());
+    }
+
+    private Room chooseRandomValidRoom() {
+
+        List<Adverb> validDirections = Directions.ALL_DIRECTIONS
+                .stream()
+                .filter(d ->  currentRoom.goDirection(d).isSuccessful())
+                .collect(Collectors.toList());
+
+        List<Room> allowedRooms = new ArrayList<>();
+        for (Adverb direction : validDirections) {
+            Optional<RoomName> roomName = getRoomInDirection(direction);
+            if (roomName.isPresent()) {
+                Room room = map.get(roomName.get());
+                if (room.isAllowedRoom()) allowedRooms.add(room);
+            }
+        }
+
+        int options = allowedRooms.size();
         int option = new Random().nextInt(options);
-        return directions.get(option);
+        return allowedRooms.get(option);
     }
 }
