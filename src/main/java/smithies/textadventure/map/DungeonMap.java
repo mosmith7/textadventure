@@ -1,5 +1,7 @@
 package smithies.textadventure.map;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import smithies.textadventure.rooms.Room;
 import smithies.textadventure.rooms.RoomBuilder;
 import smithies.textadventure.rooms.RoomName;
@@ -8,10 +10,12 @@ import smithies.textadventure.rooms.partition.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class DungeonMap {
 
     private List<Room> rooms = new ArrayList<>();
 
+    @Autowired
     public DungeonMap() {
 
         buildDownstairsRooms();
@@ -20,6 +24,17 @@ public class DungeonMap {
 
         buildUpstairsRooms();
 
+    }
+
+    public void openDoor(Room roomOne, Room roomTwo) {
+        RoomName roomOneName = roomOne.getName();
+        roomTwo.getDirectionOfRoom(roomOneName).ifPresent(direction -> {
+            roomTwo.openDoor(direction);
+        });
+        RoomName roomTwoName = roomTwo.getName();
+        roomOne.getDirectionOfRoom(roomTwoName).ifPresent(direction -> {
+            roomOne.openDoor(direction);
+        });
     }
 
     private void buildStairs() {

@@ -1,6 +1,7 @@
 package smithies.textadventure.session;
 
 import smithies.textadventure.character.Player;
+import smithies.textadventure.character.npc.Mark;
 import smithies.textadventure.character.npc.Misty;
 import smithies.textadventure.character.npc.Npc;
 import smithies.textadventure.command.Adverb;
@@ -88,8 +89,8 @@ public class SessionManager {
     }
 
     private void initialiseNpcs() {
-        Misty misty = new Misty(map, map.get(RoomName.LIVING_ROOM));
-        npcs.add(misty);
+        npcs.add(new Misty(map, map.get(RoomName.LIVING_ROOM)));
+        npcs.add(new Mark(map, map.get(RoomName.BEDROOM_ONE)));
     }
 
     private void doNpcTurns() {

@@ -18,7 +18,7 @@ public class GoDirection implements GameCommandState {
 
     @Override
     public void run() {
-        player.getRoomInDirection(direction).ifPresent(roomName -> {
+        player.goToRoomInDirection(direction).ifPresent(roomName -> {
             player.setCurrentRoom(map.get(roomName));
             player.enterRoom();
         });

@@ -6,10 +6,7 @@ import smithies.textadventure.command.Directions;
 import smithies.textadventure.command.Noun;
 import smithies.textadventure.interactable.searchable.Interactable;
 import smithies.textadventure.item.Item;
-import smithies.textadventure.rooms.partition.Deadend;
-import smithies.textadventure.rooms.partition.Door;
-import smithies.textadventure.rooms.partition.RoomPartition;
-import smithies.textadventure.rooms.partition.Stairs;
+import smithies.textadventure.rooms.partition.*;
 import smithies.textadventure.ui.DisplayConsoleOutput;
 import smithies.textadventure.ui.DisplayOutput;
 
@@ -56,8 +53,22 @@ public class Room {
         return partitionByDirection.getOrDefault(direction, new Deadend());
     }
 
+    public void openDoor(Adverb direction) {
+        RoomPartition partition = partitionByDirection.get(direction);
+        if (partition instanceof ClosedDoor) {
+            ClosedDoor door = (ClosedDoor) partition;
+            partitionByDirection.put(direction, new OpenDoor(door.isPushable()));
+        }
+    }
+
     public RoomName getRoom(Adverb direction) {
         return roomsByDirection.get(direction);
+    }
+
+    public Optional<Adverb> getDirectionOfRoom(RoomName roomName) {
+        return roomsByDirection.keySet().stream().filter(direction -> {
+            return roomName.equals(roomsByDirection.get(direction));
+        }).findFirst();
     }
 
     public String[] getFullDescriptionLines() {

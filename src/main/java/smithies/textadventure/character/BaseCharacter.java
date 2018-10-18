@@ -16,12 +16,17 @@ public abstract class BaseCharacter implements GameCharacter {
     protected Inventory inventory;
 
     @Override
-    public Optional<RoomName> getRoomInDirection(Adverb direction) {
+    public Optional<RoomName> goToRoomInDirection(Adverb direction) {
         GoDirectionResponse response = this.currentRoom.goDirection(direction);
         if (response.isSuccessful()) {
             return Optional.of(((GoDirectionSuccess) response).getRoomName());
         }
         return Optional.empty();
+    }
+
+    @Override
+    public RoomName getRoomInDirection(Adverb direction) {
+        return this.currentRoom.getRoom(direction);
     }
 
     @Override

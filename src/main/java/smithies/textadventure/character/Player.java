@@ -28,7 +28,7 @@ public class Player extends BaseCharacter {
     }
 
     @Override
-    public Optional<RoomName> getRoomInDirection(Adverb direction) {
+    public Optional<RoomName> goToRoomInDirection(Adverb direction) {
         if (isOnAnyClimbable()) climbDown();
         GoDirectionResponse response = this.currentRoom.goDirection(direction);
         if (response.isSuccessful()) {

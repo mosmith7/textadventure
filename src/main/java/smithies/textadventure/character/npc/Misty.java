@@ -6,25 +6,22 @@ import smithies.textadventure.character.BaseCharacter;
 import smithies.textadventure.character.npc.move.MoveRandomDirection;
 import smithies.textadventure.character.npc.move.MoveState;
 import smithies.textadventure.character.npc.move.StationaryState;
-import smithies.textadventure.command.Adverb;
-import smithies.textadventure.command.Directions;
 import smithies.textadventure.item.Inventory;
 import smithies.textadventure.map.DungeonMap;
 import smithies.textadventure.rooms.Room;
-import smithies.textadventure.rooms.RoomName;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
-public class Misty extends BaseCharacter implements Npc {
+public class Misty extends BaseNpcCharacter {
 
     private static final Logger LOG = LoggerFactory.getLogger(Misty.class);
 
-    private DungeonMap map;
     private MoveState currentMoveState;
 
     public Misty(DungeonMap map, Room currentRoom) {
-        this.map = map;
+        super(map);
         this.currentRoom = currentRoom;
         this.inventory = new Inventory(1);
         this.currentMoveState = new MoveRandomDirection(this, map);
@@ -61,6 +58,16 @@ public class Misty extends BaseCharacter implements Npc {
                 LOG.debug("{} has picked up a: {}", getName(), item.getName());
             });
         }
+    }
+
+    @Override
+    public boolean canOpenDoors() {
+        return false;
+    }
+
+    @Override
+    public boolean isAllowedEverywhere() {
+        return false;
     }
 
     private void randomlyChangeMoveState() {

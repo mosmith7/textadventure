@@ -8,7 +8,9 @@ import smithies.textadventure.rooms.RoomName;
 import java.util.Optional;
 
 public interface GameCharacter {
-    Optional<RoomName> getRoomInDirection(Adverb direction);
+    Optional<RoomName> goToRoomInDirection(Adverb direction);
+
+    RoomName getRoomInDirection(Adverb direction);
 
     void viewInventory();
 

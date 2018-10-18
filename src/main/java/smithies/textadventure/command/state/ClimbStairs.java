@@ -25,13 +25,13 @@ public class ClimbStairs implements GameCommandState {
     public void run() {
         switch (verticalDirection) {
             case UP:
-                player.getRoomInDirection(upCompassDirection).ifPresent(roomName -> {
+                player.goToRoomInDirection(upCompassDirection).ifPresent(roomName -> {
                     player.setCurrentRoom(map.get(roomName));
                     player.enterRoom();
                 });
                 break;
             case DOWN:
-                player.getRoomInDirection(downCompassDirection).ifPresent(roomName -> {
+                player.goToRoomInDirection(downCompassDirection).ifPresent(roomName -> {
                     player.setCurrentRoom(map.get(roomName));
                     player.enterRoom();
                 });
