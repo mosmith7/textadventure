@@ -63,7 +63,10 @@ public class Mark extends BaseNpcCharacter {
 
     private void tryToWakeUp(int currentTurnNumber) {
         if (currentTurnNumber > 5 && RANDOM.nextInt(10) > 7) {
-            this.currentMoveState = new MoveToRoom(this, map, RoomName.LIVING_ROOM);
+            List<RoomName> routeExclusions = new ArrayList<>();
+            routeExclusions.add(RoomName.BACK_GARDEN);
+            routeExclusions.add(RoomName.FRONT_GARDEN);
+            this.currentMoveState = new MoveToRoom(this, map, RoomName.LIVING_ROOM, routeExclusions);
             LOG.debug("{} has woken up!", getName());
             this.awake = true;
         }

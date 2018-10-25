@@ -7,7 +7,6 @@ import smithies.textadventure.rooms.RoomName;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class MapDirector {
 
@@ -17,8 +16,8 @@ public class MapDirector {
         this.map = map;
     }
 
-    public List<Adverb> findDirectionRouteBetweenRooms(Room startingRoom, Room targetRoom) {
-        List<RoomName> roomRoute = findRoomRouteBetweenRooms(startingRoom, targetRoom);
+    public List<Adverb> findDirectionRouteBetweenRooms(Room startingRoom, Room targetRoom, List<RoomName> routeExclusions) {
+        List<RoomName> roomRoute = findRoomRouteBetweenRooms(startingRoom, targetRoom, routeExclusions);
         List<Adverb> directionRoute = new ArrayList<>();
         for (int i = 1; i < roomRoute.size(); i++) {
             RoomName nextRoom = roomRoute.get(i);
@@ -29,20 +28,20 @@ public class MapDirector {
         return directionRoute;
     }
 
-    public List<RoomName> findRoomRouteBetweenRooms(Room startingRoom, Room targetRoom) {
+    public List<RoomName> findRoomRouteBetweenRooms(Room startingRoom, Room targetRoom, List<RoomName> routeExclusions) {
         // Start to trace out route, when you go back on yourself, remove step from route
         List<RoomName> route = new ArrayList<>();
         route.add(startingRoom.getName());
         Room currentRoom = startingRoom;
         while (!currentRoom.equals(targetRoom)) {
-            route = continueRoute(currentRoom, route);
+            route = continueRoute(currentRoom, route, routeExclusions);
             currentRoom = map.get(route.get(route.size() - 1));
         }
         return route;
     }
 
-    private List<RoomName> continueRoute(Room currentRoom, List<RoomName> route) {
-        RoomName nextRoomName = getRandomNextRoomName(currentRoom);
+    private List<RoomName> continueRoute(Room currentRoom, List<RoomName> route, List<RoomName> routeExclusions) {
+        RoomName nextRoomName = getRandomNextRoomName(currentRoom, routeExclusions);
 
         if (route.contains(nextRoomName)) {
             // If we have gone back on ourselves, remove all rooms up to that point
@@ -54,9 +53,10 @@ public class MapDirector {
         return route;
     }
 
-    private RoomName getRandomNextRoomName(Room currentRoom) {
+    private RoomName getRandomNextRoomName(Room currentRoom, List<RoomName> routeExclusions) {
         RoomName nextRoomName = RoomName.DEADEND;
-        while (RoomName.DEADEND.equals(nextRoomName)) {
+        if (!routeExclusions.contains(RoomName.DEADEND)) routeExclusions.add(RoomName.DEADEND);
+        while (routeExclusions.contains(nextRoomName)) {
             Adverb randomDirection = Directions.getRandomDirection();
             nextRoomName = currentRoom.getRoom(randomDirection);
         }

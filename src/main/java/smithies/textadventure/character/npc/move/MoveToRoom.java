@@ -11,6 +11,7 @@ import smithies.textadventure.rooms.RoomName;
 import smithies.textadventure.rooms.partition.ClosedDoor;
 import smithies.textadventure.rooms.partition.RoomPartition;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MoveToRoom implements MoveState {
@@ -23,12 +24,16 @@ public class MoveToRoom implements MoveState {
     private List<Adverb> route;
     private MapDirector mapDirector;
 
-    public MoveToRoom(Npc npc, DungeonMap map, RoomName targetRoom) {
+    public MoveToRoom(Npc npc, DungeonMap map, RoomName targetRoom, List<RoomName> routeExclusions) {
         this.npc = npc;
         this.map = map;
         this.targetRoom = targetRoom;
         this.mapDirector = new MapDirector(map);
-        this.route = mapDirector.findDirectionRouteBetweenRooms(npc.getCurrentRoom(), map.getRoomByName(targetRoom));
+        this.route = mapDirector.findDirectionRouteBetweenRooms(npc.getCurrentRoom(), map.getRoomByName(targetRoom), routeExclusions);
+    }
+
+    public MoveToRoom(Npc npc, DungeonMap map, RoomName targetRoom) {
+        this(npc, map, targetRoom, new ArrayList<>());
     }
 
     @Override
