@@ -2,7 +2,6 @@ package smithies.textadventure.character.npc;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import smithies.textadventure.character.npc.move.MoveRandomDirection;
 import smithies.textadventure.character.npc.move.MoveState;
 import smithies.textadventure.character.npc.move.MoveToRoom;
 import smithies.textadventure.character.npc.move.StationaryState;
@@ -24,6 +23,7 @@ public class Mark extends BaseNpcCharacter {
     private MoveState currentMoveState;
     private AtomicInteger turnNumber = new AtomicInteger(0);
     private boolean awake = false;
+    private boolean sitting = false;
 
     public Mark(DungeonMap map, Room currentRoom) {
         super(map);
@@ -40,7 +40,8 @@ public class Mark extends BaseNpcCharacter {
     @Override
     public String[] getDescriptionWhenInSameRoom() {
         List<String> messages = new ArrayList<>();
-        messages.add("Your favourite biped is standing in the room.");
+        String state = sitting ? "sitting" : "standing";
+        messages.add("Your favourite biped is " + state + " in the room.");
         if (!inventory.isEmpty()) {
             messages.add("In it's hand is a " + inventory.peek().get().name());
         }
@@ -58,6 +59,17 @@ public class Mark extends BaseNpcCharacter {
         if (currentMoveState instanceof MoveToRoom && ((MoveToRoom) currentMoveState).isInTargetRoom()) {
             this.currentMoveState = new StationaryState(this);
             LOG.debug("{} has changed state to {}", getName(), currentMoveState);
+        }
+
+        changeStationaryState();
+    }
+
+    private void changeStationaryState() {
+        boolean stationary = currentMoveState instanceof StationaryState;
+        boolean roomWithChairs = currentRoom.getName().equals(RoomName.LIVING_ROOM)
+                ||  currentRoom.getName().equals(RoomName.KITCHEN_SOUTH);
+        if (stationary && roomWithChairs) {
+            this.sitting = RANDOM.nextInt(10) > 3;
         }
     }
 
