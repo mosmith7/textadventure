@@ -2,6 +2,8 @@ package smithies.textadventure.map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import smithies.textadventure.command.Adverb;
+import smithies.textadventure.command.Directions;
 import smithies.textadventure.rooms.Room;
 import smithies.textadventure.rooms.RoomBuilder;
 import smithies.textadventure.rooms.RoomName;
@@ -9,6 +11,7 @@ import smithies.textadventure.rooms.partition.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class DungeonMap {
@@ -26,15 +29,15 @@ public class DungeonMap {
 
     }
 
+    public Room getRoomByName(RoomName roomName) {
+        return rooms.stream().filter(r -> r.getName().equals(roomName)).findFirst().get();
+    }
+
     public void openDoor(Room roomOne, Room roomTwo) {
         RoomName roomOneName = roomOne.getName();
-        roomTwo.getDirectionOfRoom(roomOneName).ifPresent(direction -> {
-            roomTwo.openDoor(direction);
-        });
+        roomTwo.getDirectionOfRoom(roomOneName).ifPresent(roomTwo::openDoor);
         RoomName roomTwoName = roomTwo.getName();
-        roomOne.getDirectionOfRoom(roomTwoName).ifPresent(direction -> {
-            roomOne.openDoor(direction);
-        });
+        roomOne.getDirectionOfRoom(roomTwoName).ifPresent(roomOne::openDoor);
     }
 
     private void buildStairs() {
@@ -61,6 +64,11 @@ public class DungeonMap {
                 .build();
         rooms.add(hallSouth);
 
+        Room study = new RoomBuilder(RoomName.STUDY, false)
+                .addWestRoom(RoomName.HALL_SOUTH, new ClosedDoor(false))
+                .build();
+        rooms.add(study);
+
         Room hallMiddle = new RoomBuilder(RoomName.HALL_MIDDLE, false)
                 .addNorthRoom(RoomName.HALL_NORTH, new NoDoor())
                 .addEastRoom(RoomName.LIVING_ROOM, new OpenDoor(true))
@@ -74,6 +82,11 @@ public class DungeonMap {
                 .addWestRoom(RoomName.KITCHEN_NORTH, new OpenDoor(false))
                 .build();
         rooms.add(hallNorth);
+
+        Room toilet = new RoomBuilder(RoomName.TOILET, false)
+                .addSouthRoom(RoomName.HALL_NORTH, new ClosedDoor(false))
+                .build();
+        rooms.add(toilet);
 
         Room kitchenNorth = new RoomBuilder(RoomName.KITCHEN_NORTH, false)
                 .addEastRoom(RoomName.HALL_NORTH, new OpenDoor(true))
@@ -93,6 +106,17 @@ public class DungeonMap {
                 .addWestRoom(RoomName.HALL_MIDDLE, new OpenDoor(true))
                 .build();
         rooms.add(livingRoom);
+
+        Room backGarden = new RoomBuilder(RoomName.BACK_GARDEN, false)
+                .addNorthRoom(RoomName.LIVING_ROOM, new LockedDoor(false))
+                .addWestRoom(RoomName.KITCHEN_NORTH, new LockedDoor(false))
+                .build();
+        rooms.add(backGarden);
+
+        Room frontGarden = new RoomBuilder(RoomName.FRONT_GARDEN, false)
+                .addNorthRoom(RoomName.HALL_SOUTH, new LockedDoor(false))
+                .build();
+        rooms.add(frontGarden);
     }
 
     private void buildUpstairsRooms() {

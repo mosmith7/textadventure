@@ -4,10 +4,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import smithies.textadventure.character.npc.move.MoveRandomDirection;
 import smithies.textadventure.character.npc.move.MoveState;
+import smithies.textadventure.character.npc.move.MoveToRoom;
 import smithies.textadventure.character.npc.move.StationaryState;
 import smithies.textadventure.item.Inventory;
 import smithies.textadventure.map.DungeonMap;
 import smithies.textadventure.rooms.Room;
+import smithies.textadventure.rooms.RoomName;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,12 +54,18 @@ public class Mark extends BaseNpcCharacter {
         if (!awake) tryToWakeUp(currentTurnNumber);
 
         currentMoveState.move();
+
+        if (currentMoveState instanceof MoveToRoom && ((MoveToRoom) currentMoveState).isInTargetRoom()) {
+            this.currentMoveState = new StationaryState(this);
+            LOG.debug("{} has changed state to {}", getName(), currentMoveState);
+        }
     }
 
     private void tryToWakeUp(int currentTurnNumber) {
         if (currentTurnNumber > 5 && RANDOM.nextInt(10) > 7) {
-            this.currentMoveState = new MoveRandomDirection(this, map);
+            this.currentMoveState = new MoveToRoom(this, map, RoomName.LIVING_ROOM);
             LOG.debug("{} has woken up!", getName());
+            this.awake = true;
         }
     }
 }

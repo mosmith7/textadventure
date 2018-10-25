@@ -7,6 +7,7 @@ import smithies.textadventure.rooms.GoDirectionResponse;
 import smithies.textadventure.rooms.GoDirectionSuccess;
 import smithies.textadventure.rooms.Room;
 import smithies.textadventure.rooms.RoomName;
+import smithies.textadventure.rooms.partition.RoomPartition;
 
 import java.util.Optional;
 
@@ -27,6 +28,11 @@ public abstract class BaseCharacter implements GameCharacter {
     @Override
     public RoomName getRoomInDirection(Adverb direction) {
         return this.currentRoom.getRoom(direction);
+    }
+
+    @Override
+    public RoomPartition getPartitionInDirection(Adverb direction) {
+        return this.currentRoom.getPartition(direction);
     }
 
     @Override

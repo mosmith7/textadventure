@@ -4,6 +4,7 @@ import smithies.textadventure.command.Adverb;
 import smithies.textadventure.command.Noun;
 import smithies.textadventure.rooms.Room;
 import smithies.textadventure.rooms.RoomName;
+import smithies.textadventure.rooms.partition.RoomPartition;
 
 import java.util.Optional;
 
@@ -11,6 +12,8 @@ public interface GameCharacter {
     Optional<RoomName> goToRoomInDirection(Adverb direction);
 
     RoomName getRoomInDirection(Adverb direction);
+
+    RoomPartition getPartitionInDirection(Adverb direction);
 
     void viewInventory();
 
