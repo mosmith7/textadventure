@@ -3,6 +3,7 @@ package smithies.textadventure.character.npc;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import smithies.textadventure.character.npc.move.MoveState;
+import smithies.textadventure.character.npc.move.MoveToCharacter;
 import smithies.textadventure.character.npc.move.MoveToRoom;
 import smithies.textadventure.character.npc.move.StationaryState;
 import smithies.textadventure.item.Inventory;
@@ -55,18 +56,40 @@ public class Mark extends BaseNpcCharacter {
 
     @Override
     public void takeTurn() {
-        int currentTurnNumber = turnNumber.getAndIncrement();
+        if (moveStateLockedForTurns == 0) {
+            int currentTurnNumber = turnNumber.getAndIncrement();
 
-        if (!awake) tryToWakeUp(currentTurnNumber);
+            if (!awake) tryToWakeUp(currentTurnNumber);
 
-        currentMoveState.move();
+            currentMoveState.move();
 
-        if (currentMoveState instanceof MoveToRoom && ((MoveToRoom) currentMoveState).isInTargetRoom()) {
-            this.currentMoveState = new StationaryState(this);
-            LOG.debug("{} has changed state to {}", getName(), currentMoveState);
+            if (currentMoveState instanceof MoveToRoom && ((MoveToRoom) currentMoveState).isInTargetRoom()) {
+                this.currentMoveState = new StationaryState(this);
+                LOG.debug("{} has changed state to {}", getName(), currentMoveState);
+            }
+
+            if (currentMoveState instanceof MoveToCharacter && ((MoveToCharacter) currentMoveState).isWithTargetNpc()) {
+                int turnsToRemainInSameRoom = ((MoveToCharacter) currentMoveState).getTurnsToRemainInSameRoom();
+                this.currentMoveState = new StationaryState(this);
+                this.moveStateLockedForTurns = turnsToRemainInSameRoom;
+                LOG.debug("{} has changed state to {}", getName(), currentMoveState);
+            }
+
+            if (currentTurnNumber < 20 && RoomName.LIVING_ROOM.equals(currentRoom.getName())) {
+                List<RoomName> dontGoVia = new ArrayList<>();
+                dontGoVia.add(RoomName.STAIRS_SOUTH);
+                dontGoVia.add(RoomName.FRONT_GARDEN);
+                dontGoVia.add(RoomName.BACK_GARDEN);
+                Npc misty = otherNpcs.stream().filter(npc -> "Misty".equals(npc.getName())).findFirst().get();
+                currentMoveState = new MoveToCharacter(this, map, misty, dontGoVia);
+            }
+
+            changeStationaryState();
+        } else {
+            currentMoveState.move();
+            moveStateLockedForTurns--;
         }
 
-        changeStationaryState();
     }
 
     private void changeStationaryState() {

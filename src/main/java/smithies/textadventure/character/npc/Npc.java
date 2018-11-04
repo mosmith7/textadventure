@@ -1,8 +1,11 @@
 package smithies.textadventure.character.npc;
 
 import smithies.textadventure.character.GameCharacter;
+import smithies.textadventure.character.npc.move.MoveState;
 import smithies.textadventure.command.Adverb;
 import smithies.textadventure.rooms.RoomName;
+
+import java.util.List;
 
 public interface Npc extends GameCharacter {
 
@@ -22,8 +25,12 @@ public interface Npc extends GameCharacter {
         return true;
     }
 
+    void setOtherNpcs(List<Npc> otherNpcs);
+
     void openDoorAndMoveThrough(Adverb direction);
 
     void openDoor(Adverb direction);
+
+    void setCurrentMoveState(MoveState moveState, int numberOfTurns);
 
 }

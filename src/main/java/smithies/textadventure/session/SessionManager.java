@@ -94,6 +94,10 @@ public class SessionManager {
     private void initialiseNpcs() {
         npcs.add(new Misty(map, map.get(RoomName.LIVING_ROOM)));
         npcs.add(new Mark(map, map.get(RoomName.BEDROOM_ONE)));
+
+        npcs.forEach(npc -> {
+            npc.setOtherNpcs(npcs);
+        });
     }
 
     private void doNpcTurns() {

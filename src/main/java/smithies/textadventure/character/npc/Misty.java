@@ -2,7 +2,6 @@ package smithies.textadventure.character.npc;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import smithies.textadventure.character.BaseCharacter;
 import smithies.textadventure.character.npc.move.MoveRandomDirection;
 import smithies.textadventure.character.npc.move.MoveState;
 import smithies.textadventure.character.npc.move.StationaryState;
@@ -17,8 +16,6 @@ import java.util.Random;
 public class Misty extends BaseNpcCharacter {
 
     private static final Logger LOG = LoggerFactory.getLogger(Misty.class);
-
-    private MoveState currentMoveState;
 
     public Misty(DungeonMap map, Room currentRoom) {
         super(map);
@@ -50,18 +47,23 @@ public class Misty extends BaseNpcCharacter {
 
     @Override
     public void takeTurn() {
-        // Misty should try to migrate to where the most humans are
-        // But if she is in a room with a toy, she will try to take it
-        // She should also have a tendancy to circle around the house
+        if (moveStateLockedForTurns == 0) {
+            // Misty should try to migrate to where the most humans are
+            // But if she is in a room with a toy, she will try to take it
+            // She should also have a tendancy to circle around the house
 
-        randomlyChangeMoveState();
-        currentMoveState.move();
+            randomlyChangeMoveState();
+            currentMoveState.move();
 
-        if (currentRoom.hasItem() && !isInventoryFull()) {
-            currentRoom.takeItem(this, currentRoom.peekItem()).ifPresent(item -> {
-                inventory.addItem(item);
-                LOG.debug("{} has picked up a: {}", getName(), item.getName());
-            });
+            if (currentRoom.hasItem() && !isInventoryFull()) {
+                currentRoom.takeItem(this, currentRoom.peekItem()).ifPresent(item -> {
+                    inventory.addItem(item);
+                    LOG.debug("{} has picked up a: {}", getName(), item.getName());
+                });
+            }
+        } else {
+            currentMoveState.move();
+            moveStateLockedForTurns--;
         }
     }
 
