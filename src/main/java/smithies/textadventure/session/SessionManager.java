@@ -1,5 +1,6 @@
 package smithies.textadventure.session;
 
+import smithies.textadventure.character.GameCharacter;
 import smithies.textadventure.character.Player;
 import smithies.textadventure.character.npc.Mark;
 import smithies.textadventure.character.npc.Misty;
@@ -24,6 +25,7 @@ import smithies.textadventure.ui.UserTextInputRetriever;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class SessionManager {
 
@@ -56,7 +58,9 @@ public class SessionManager {
                 commandHandler.setCurrentState(gameCommand);
                 commandHandler.processCommand();
             });
+            npcsCheckPlayerIsInForbiddenRoom();
             doNpcTurns();
+            npcsCheckPlayerIsInForbiddenRoom();
             if (!(commandHandler.getCurrentState() instanceof ViewInventory)) {
                 // TODO: should other commands prevent this being displayed?
                 displayNpcsInSameRoom();
@@ -97,12 +101,27 @@ public class SessionManager {
         npcs.forEach(Npc::takeTurn);
     }
 
+    private void npcsCheckPlayerIsInForbiddenRoom() {
+        getNpcsInSameRoom()
+                .stream()
+                .filter(npc -> !(npc instanceof Misty))
+                .forEach(npc -> {
+                    output.displayTextLines(npc.getName() + " is glaring at you and says something in a stern voice.",
+                        "You feel the urge to go back downstairs very quickly");
+                    player.setCurrentRoom(map.get(RoomName.HALL_SOUTH));
+                    player.enterRoom();
+                });
+    }
+
     private void displayNpcsInSameRoom() {
-        npcs.forEach(npc -> {
-            if (player.getCurrentRoom().equals(npc.getCurrentRoom())) {
-                output.displayTextLines(npc.getDescriptionWhenInSameRoom());
-            }
+        getNpcsInSameRoom().forEach(npc -> {
+            output.displayTextLines(npc.getDescriptionWhenInSameRoom());
         });
+    }
+
+    private List<Npc> getNpcsInSameRoom() {
+        return this.npcs.stream().filter(npc -> player.getCurrentRoom().equals(npc.getCurrentRoom()))
+                .collect(Collectors.toList());
     }
 
 }
