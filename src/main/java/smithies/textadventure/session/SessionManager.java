@@ -58,12 +58,11 @@ public class SessionManager {
                 commandHandler.setCurrentState(gameCommand);
                 commandHandler.processCommand();
             });
-            npcsCheckPlayerIsInForbiddenRoom();
             doNpcTurns();
-            npcsCheckPlayerIsInForbiddenRoom();
             if (!(commandHandler.getCurrentState() instanceof ViewInventory)) {
                 // TODO: should other commands prevent this being displayed?
                 displayNpcsInSameRoom();
+                npcsCheckPlayerIsInForbiddenRoom();
             }
         }
     }
@@ -106,7 +105,7 @@ public class SessionManager {
                 .stream()
                 .filter(npc -> !(npc instanceof Misty))
                 .forEach(npc -> {
-                    output.displayTextLines(npc.getName() + " is glaring at you and says something in a stern voice.",
+                    output.displayTextLines(npc.getNameForSasha() + " is glaring at you and says something in a stern voice.",
                         "You feel the urge to go back downstairs very quickly");
                     player.setCurrentRoom(map.get(RoomName.HALL_SOUTH));
                     player.enterRoom();

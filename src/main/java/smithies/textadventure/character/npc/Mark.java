@@ -38,10 +38,15 @@ public class Mark extends BaseNpcCharacter {
     }
 
     @Override
+    public String getNameForSasha() {
+        return "Your favourite biped";
+    }
+
+    @Override
     public String[] getDescriptionWhenInSameRoom() {
         List<String> messages = new ArrayList<>();
         String state = sitting ? "sitting" : "standing";
-        messages.add("Your favourite biped is " + state + " in the room.");
+        messages.add(getNameForSasha() + " is " + state + " in the room.");
         if (!inventory.isEmpty()) {
             messages.add("In it's hand is a " + inventory.peek().get().name());
         }

@@ -33,9 +33,14 @@ public class Misty extends BaseNpcCharacter {
     }
 
     @Override
+    public String getNameForSasha() {
+        return "A fluffy black quadruped";
+    }
+
+    @Override
     public String[] getDescriptionWhenInSameRoom() {
         List<String> messages = new ArrayList<>();
-        messages.add("A fluffy black quadruped is standing in the room.");
+        messages.add(getNameForSasha() + " is standing in the room.");
         messages.add("It looks like it wants to play.");
         if (!inventory.isEmpty()) {
             messages.add("In it's mouth is a " + inventory.peek().get().name());

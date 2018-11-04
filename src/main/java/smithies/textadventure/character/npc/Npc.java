@@ -8,6 +8,8 @@ public interface Npc extends GameCharacter {
 
     String getName();
 
+    String getNameForSasha();
+
     String[] getDescriptionWhenInSameRoom();
 
     void takeTurn();
