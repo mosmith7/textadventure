@@ -105,15 +105,17 @@ public class SessionManager {
     }
 
     private void npcsCheckPlayerIsInForbiddenRoom() {
-        getNpcsInSameRoom()
-                .stream()
-                .filter(npc -> !(npc instanceof Misty))
-                .forEach(npc -> {
-                    output.displayTextLines(npc.getNameForSasha() + " is glaring at you and says something in a stern voice.",
-                        "You feel the urge to go back downstairs very quickly");
-                    player.setCurrentRoom(map.get(RoomName.HALL_SOUTH));
-                    player.enterRoom();
-                });
+        if (player.getCurrentRoom().isForbiddenRoom()) {
+            getNpcsInSameRoom()
+                    .stream()
+                    .filter(npc -> !(npc instanceof Misty))
+                    .forEach(npc -> {
+                        output.displayTextLines(npc.getNameForSasha() + " is glaring at you and says something in a stern voice.",
+                                "You feel the urge to go back downstairs very quickly");
+                        player.setCurrentRoom(map.get(RoomName.HALL_SOUTH));
+                        player.enterRoom();
+                    });
+        }
     }
 
     private void displayNpcsInSameRoom() {

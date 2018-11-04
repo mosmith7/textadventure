@@ -76,12 +76,12 @@ public class Mark extends BaseNpcCharacter {
             }
 
             if (currentTurnNumber < 20 && RoomName.LIVING_ROOM.equals(currentRoom.getName())) {
-                List<RoomName> dontGoVia = new ArrayList<>();
-                dontGoVia.add(RoomName.STAIRS_SOUTH);
-                dontGoVia.add(RoomName.FRONT_GARDEN);
-                dontGoVia.add(RoomName.BACK_GARDEN);
+                List<RoomName> avoidRooms = new ArrayList<>();
+                avoidRooms.add(RoomName.STAIRS_SOUTH);
+                avoidRooms.add(RoomName.FRONT_GARDEN);
+                avoidRooms.add(RoomName.BACK_GARDEN);
                 Npc misty = otherNpcs.stream().filter(npc -> "Misty".equals(npc.getName())).findFirst().get();
-                currentMoveState = new MoveToCharacter(this, map, misty, dontGoVia);
+                currentMoveState = new MoveToCharacter(this, map, misty, avoidRooms);
             }
 
             changeStationaryState();
