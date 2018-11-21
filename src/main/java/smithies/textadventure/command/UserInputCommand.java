@@ -16,33 +16,35 @@ public class UserInputCommand {
     private Verb verb;
     private Adverb adverb;
     private Noun noun;
+    private Noun secondNoun;
 
-    public UserInputCommand(CommandCache commandCache, DungeonMap map, Verb verb, Adverb adverb, Noun noun) {
+    public UserInputCommand(CommandCache commandCache, DungeonMap map, Verb verb, Adverb adverb, Noun noun, Noun secondNoun) {
         this.commandCache = commandCache;
         this.map = map;
         this.verb = verb;
         this.adverb = adverb;
         this.noun = noun;
+        this.secondNoun = secondNoun;
     }
 
     public UserInputCommand(CommandCache commandCache, DungeonMap map, Verb verb, Adverb adverb) {
-        this(commandCache, map, verb, adverb, null);
+        this(commandCache, map, verb, adverb, null, null);
     }
 
     public UserInputCommand(CommandCache commandCache, DungeonMap map, Verb verb, Noun noun) {
-        this(commandCache, map, verb, null, noun);
+        this(commandCache, map, verb, null, noun, null);
     }
 
     public UserInputCommand(CommandCache commandCache, DungeonMap map, Verb verb) {
-        this(commandCache, map, verb, null, null);
+        this(commandCache, map, verb, null, null, null);
     }
 
     public UserInputCommand(CommandCache commandCache, DungeonMap map, Adverb adverb) {
-        this(commandCache, map, null, adverb, null);
+        this(commandCache, map, null, adverb, null, null);
     }
 
     public UserInputCommand(CommandCache commandCache, DungeonMap map, Noun noun) {
-        this(commandCache, map, null, null, noun);
+        this(commandCache, map, null, null, noun, null);
     }
 
     public static UserInputCommand empty(CommandCache commandCache) {
@@ -156,8 +158,9 @@ public class UserInputCommand {
                     questionReturned = true;
                 }
             }
-        } else if (Verb.PUT.equals(verb)) {
-            // TODO: This will be tricky. Will need two nouns and adverb. e.g. put tennis ball under bed
+        } else if (Verb.PUT.equals(verb) && noun != null && secondNoun != null) {
+            if (adverb == null) adverb = chooseRandomSearchAdverb();
+            command = new PutItem(player, noun, secondNoun, adverb);
         } else if (Verb.EXIT.equals(verb)) {
             command = new Exit();
         }  else if (Verb.FAILED_TO_PARSE.equals(verb)) {

@@ -5,6 +5,7 @@ import smithies.textadventure.command.Adverb;
 import smithies.textadventure.command.Directions;
 import smithies.textadventure.command.Noun;
 import smithies.textadventure.interactable.searchable.Interactable;
+import smithies.textadventure.interactable.searchable.Searchable;
 import smithies.textadventure.item.Item;
 import smithies.textadventure.rooms.partition.*;
 import smithies.textadventure.ui.DisplayConsoleOutput;

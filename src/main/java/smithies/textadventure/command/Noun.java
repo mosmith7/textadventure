@@ -8,6 +8,8 @@ public enum Noun {
     STAIRS("stairs"),
 
     TENNIS_BALL("tennis ball", "ball"),
+    KONG("kong"),
+    BALL_AND_ROPE("ball and rope", "ballandrope"),
 
     SIDEBOARD("sideboard"),
     DOG_BED("dog bed", "bed"),

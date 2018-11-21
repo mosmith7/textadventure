@@ -2,6 +2,7 @@ package smithies.textadventure.character;
 
 import smithies.textadventure.command.Adverb;
 import smithies.textadventure.command.Noun;
+import smithies.textadventure.item.Item;
 import smithies.textadventure.rooms.Room;
 import smithies.textadventure.rooms.RoomName;
 import smithies.textadventure.rooms.partition.RoomPartition;
@@ -22,6 +23,8 @@ public interface GameCharacter {
     boolean isInventoryEmpty();
 
     Optional<Noun> inventoryPeek();
+
+    Optional<Item> removeItemFromInventory(Noun name);
 
     boolean canTakeItem(Noun itemName);
 

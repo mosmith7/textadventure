@@ -22,9 +22,12 @@ public class UserTextInputParser {
         Optional<Verb> optionalVerb = findVerb(input);
         Optional<Adverb> optionalAdverb = findAdverb(input);
         Optional<Noun> optionalNoun = findNoun(input);
+        Optional<Noun> optionalSecondNoun = findSecondNoun(input);
 
-        if (optionalVerb.isPresent() && optionalAdverb.isPresent() && optionalNoun.isPresent()) {
-            return new UserInputCommand(commandCache, map, optionalVerb.get(), optionalAdverb.get(), optionalNoun.get());
+        if (optionalVerb.isPresent() && optionalAdverb.isPresent() && optionalNoun.isPresent() && optionalSecondNoun.isPresent()) {
+            return new UserInputCommand(commandCache, map, optionalVerb.get(), optionalAdverb.get(), optionalNoun.get(), optionalSecondNoun.get());
+        } else if (optionalVerb.isPresent() && optionalAdverb.isPresent() && optionalNoun.isPresent()) {
+            return new UserInputCommand(commandCache, map, optionalVerb.get(), optionalAdverb.get(), optionalNoun.get(), null);
         } else if (optionalVerb.isPresent() && optionalAdverb.isPresent()) {
             return new UserInputCommand(commandCache, map, optionalVerb.get(), optionalAdverb.get());
         } else if (optionalVerb.isPresent() && optionalNoun.isPresent()) {
@@ -85,5 +88,23 @@ public class UserTextInputParser {
             }
         }
         return Optional.empty();
+    }
+
+    private Optional<Noun> findSecondNoun(String input) {
+        Noun[] allNouns = Noun.values();
+        Integer firstNounEndIndex = 0;
+        for (int i = 0; i < allNouns.length; i++) {
+            Noun noun = allNouns[i];
+            for (String nounAlias : noun.getAliases()) {
+                int index = input.indexOf(nounAlias);
+                if (index != -1) {
+                    int endIndex = index + nounAlias.length();
+                    if (firstNounEndIndex == 0 || (firstNounEndIndex > 0 && endIndex < firstNounEndIndex)) {
+                        firstNounEndIndex = endIndex;
+                    }
+                }
+            }
+        }
+        return findNoun(input.substring(firstNounEndIndex));
     }
 }

@@ -8,33 +8,54 @@ import smithies.textadventure.item.Item;
 import smithies.textadventure.ui.DisplayConsoleOutput;
 import smithies.textadventure.ui.DisplayOutput;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 public abstract class Interactable extends Nameable implements Searchable, Climbable {
 
     protected DisplayOutput output = new DisplayConsoleOutput();
     private String positionDescription;
-    private Map<Adverb, Item> itemByAdverb = new HashMap<>();
+    private Map<Adverb, List<Item>> itemsByAdverb = new HashMap<>();
 
     protected Interactable(Noun name, String positionDescription) {
         super(name);
         this.positionDescription = positionDescription;
+        itemsByAdverb.put(Adverb.ON, new ArrayList<>());
+        itemsByAdverb.put(Adverb.UNDER, new ArrayList<>());
+        itemsByAdverb.put(Adverb.IN, new ArrayList<>());
     }
 
     public Optional<Item> search(Adverb adverb) {
         // Intended to be called from searchAndResolve method
-        Item item = itemByAdverb.getOrDefault(adverb, null);
-        return Optional.ofNullable(item);
+        List<Item> items = itemsByAdverb.getOrDefault(adverb, new ArrayList<>());
+        return Optional.ofNullable(items.get(0));
+    }
+
+    public List<Noun> peek() {
+        List<Noun> itemNames = new ArrayList<>();
+        itemsByAdverb.keySet().forEach(key -> {
+            List<Item> items = itemsByAdverb.get(key);
+            for (Item item : items) {
+                itemNames.add(item.getName());
+            }
+        });
+        return itemNames;
     }
 
     public void addItem(Item item, Adverb adverb) {
-        itemByAdverb.put(adverb, item);
+        List<Item> items = itemsByAdverb.get(adverb);
+        if (items == null) items = new ArrayList<>();
+        items.add(item);
+        itemsByAdverb.put(adverb, items);
     }
 
     public String getPositionDescription() {
         return positionDescription;
+    }
+
+    public void displayItemDescription(Adverb adverb) {
+        itemsByAdverb.get(adverb).forEach(item -> {
+            output.displayTextLine(String.format("%s the %s is a %s", adverb, getName(), item.getName()));
+        });
     }
 
     public void goTo() {

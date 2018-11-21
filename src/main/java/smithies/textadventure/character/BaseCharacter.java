@@ -3,6 +3,7 @@ package smithies.textadventure.character;
 import smithies.textadventure.command.Adverb;
 import smithies.textadventure.command.Noun;
 import smithies.textadventure.item.Inventory;
+import smithies.textadventure.item.Item;
 import smithies.textadventure.rooms.GoDirectionResponse;
 import smithies.textadventure.rooms.GoDirectionSuccess;
 import smithies.textadventure.rooms.Room;
@@ -53,6 +54,11 @@ public abstract class BaseCharacter implements GameCharacter {
     @Override
     public Optional<Noun> inventoryPeek() {
         return inventory.peek();
+    }
+
+    @Override
+    public Optional<Item> removeItemFromInventory(Noun name) {
+        return inventory.removeItem(name);
     }
 
     @Override
