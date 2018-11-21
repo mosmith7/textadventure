@@ -90,7 +90,7 @@ public class SessionManager {
         Sideboard shelf = new Sideboard("Against the wall is a " + Noun.SIDEBOARD);
         Kong kong = new Kong();
         hideItemInSearchable(RoomName.HALL_SOUTH, shelf, kong, Adverb.UNDER);
-//        collectables.add(kong);
+        collectables.add(kong);
 
         DogBed dogBed = new DogBed("Against the wall is a nice soft bed. Your bed.");
         BallAndRope ballAndRope = new BallAndRope();
