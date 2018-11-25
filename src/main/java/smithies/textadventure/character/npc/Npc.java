@@ -1,5 +1,6 @@
 package smithies.textadventure.character.npc;
 
+import smithies.textadventure.character.BaseCharacter;
 import smithies.textadventure.character.GameCharacter;
 import smithies.textadventure.character.npc.move.MoveState;
 import smithies.textadventure.command.Adverb;
@@ -26,6 +27,8 @@ public interface Npc extends GameCharacter {
     }
 
     void setOtherNpcs(List<Npc> otherNpcs);
+
+    void setPlayer(BaseCharacter player);
 
     void openDoorAndMoveThrough(Adverb direction);
 

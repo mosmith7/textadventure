@@ -1,6 +1,7 @@
 package smithies.textadventure.rooms;
 
 import smithies.textadventure.character.GameCharacter;
+import smithies.textadventure.character.npc.Npc;
 import smithies.textadventure.command.Adverb;
 import smithies.textadventure.command.Directions;
 import smithies.textadventure.command.Noun;
@@ -236,6 +237,31 @@ public class Room {
 
     public void goToSearchable(Noun searchableName) {
         getSearchable(searchableName).ifPresent(Interactable::goTo);
+    }
+
+    public boolean containsItem() {
+        if (!items.isEmpty()) return true;
+        for (Searchable searchable : searchables) {
+            if (!searchable.peek().isEmpty()) return true;
+        }
+        return false;
+    }
+
+    public Optional<Item> takeItem(Npc npc) {
+        List<Item> itemsInRoom = new ArrayList<>();
+        if (!itemsInRoom.isEmpty()) {
+            Item item = itemsInRoom.get(0);
+            itemsInRoom.remove(0);
+            return Optional.of(item);
+        } else {
+            List<Noun> itemNamesInSearchables = new ArrayList<>();
+            for (Interactable searchable : searchables) {
+                if (!searchable.peek().isEmpty()) {
+                    return searchable.pop(npc);
+                }
+            }
+        }
+        return Optional.empty();
     }
 
     private String onFloorDescription(Item item) {

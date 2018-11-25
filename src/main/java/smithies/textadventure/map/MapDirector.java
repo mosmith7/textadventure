@@ -40,6 +40,10 @@ public class MapDirector {
         return route;
     }
 
+    public Room getRandomAdjacentRoom(Room currentRoom) {
+        return map.get(getRandomNextRoomName(currentRoom, new ArrayList<>()));
+    }
+
     private List<RoomName> continueRoute(Room currentRoom, List<RoomName> route, List<RoomName> routeExclusions) {
         RoomName nextRoomName = getRandomNextRoomName(currentRoom, routeExclusions);
 

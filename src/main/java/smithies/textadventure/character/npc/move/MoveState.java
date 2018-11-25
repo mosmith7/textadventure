@@ -1,6 +1,8 @@
 package smithies.textadventure.character.npc.move;
 
-public interface MoveState {
+import smithies.textadventure.character.CharacterState;
+
+public interface MoveState extends CharacterState {
 
     void move();
 }

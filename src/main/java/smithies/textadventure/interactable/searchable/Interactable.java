@@ -1,5 +1,6 @@
 package smithies.textadventure.interactable.searchable;
 
+import smithies.textadventure.character.npc.Npc;
 import smithies.textadventure.command.Adverb;
 import smithies.textadventure.command.Nameable;
 import smithies.textadventure.command.Noun;
@@ -39,6 +40,20 @@ public abstract class Interactable extends Nameable implements Searchable, Climb
             }
         });
         return itemNames;
+    }
+
+    public Optional<Item> pop(Npc npc) {
+        for (Adverb key : itemsByAdverb.keySet()) {
+            List<Item> items = itemsByAdverb.get(key);
+            if (!items.isEmpty()) {
+                Item itemToReturn = items.get(0);
+                items.remove(itemToReturn);
+                output.displayTextLine(String.format("%s takes a %s from %s the %s",
+                        npc.getName(), itemToReturn.getName(), key, getName()));
+                return Optional.of(itemToReturn);
+            }
+        }
+        return Optional.empty();
     }
 
     public void addItem(Item item, Adverb adverb) {

@@ -1,5 +1,6 @@
 package smithies.textadventure.session;
 
+import smithies.textadventure.character.BaseCharacter;
 import smithies.textadventure.character.Player;
 import smithies.textadventure.character.npc.Mark;
 import smithies.textadventure.character.npc.Misty;
@@ -51,9 +52,10 @@ public class SessionManager {
         displayStartingMessage();
         distributeItems();
         initialiseSearchables();
-        initialiseNpcs();
 
         player = new Player(map.get(RoomName.HALL_SOUTH));
+        initialiseNpcs(player);
+
         player.enterRoom();
         while(!victoryReached) {
             displayVictoryLocationItems();
@@ -61,6 +63,7 @@ public class SessionManager {
             String input = inputRetriever.getLine();
             UserInputCommand userCommand = inputParser.parseString(input);
             userCommand.toGameCommand(player, map).ifPresent(gameCommand -> {
+                player.setCurrentState(gameCommand);
                 commandHandler.setCurrentState(gameCommand);
                 commandHandler.processCommand();
             });
@@ -106,12 +109,13 @@ public class SessionManager {
         room.addSearchable(searchable);
     }
 
-    private void initialiseNpcs() {
+    private void initialiseNpcs(BaseCharacter player) {
         npcs.add(new Misty(map, map.get(RoomName.LIVING_ROOM)));
         npcs.add(new Mark(map, map.get(RoomName.BEDROOM_ONE)));
 
         npcs.forEach(npc -> {
             npc.setOtherNpcs(npcs);
+            npc.setPlayer(player);
         });
     }
 

@@ -16,6 +16,7 @@ public abstract class BaseCharacter implements GameCharacter {
 
     protected Room currentRoom;
     protected Inventory inventory;
+    protected CharacterState currentState;
 
     @Override
     public Optional<RoomName> goToRoomInDirection(Adverb direction) {
@@ -34,6 +35,16 @@ public abstract class BaseCharacter implements GameCharacter {
     @Override
     public RoomPartition getPartitionInDirection(Adverb direction) {
         return this.currentRoom.getPartition(direction);
+    }
+
+    @Override
+    public CharacterState getCurrentState() {
+        return currentState;
+    }
+
+    @Override
+    public void setCurrentState(CharacterState currentState) {
+        this.currentState = currentState;
     }
 
     @Override

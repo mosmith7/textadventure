@@ -2,6 +2,7 @@ package smithies.textadventure.character;
 
 import smithies.textadventure.command.Adverb;
 import smithies.textadventure.command.Noun;
+import smithies.textadventure.command.state.GameCommandState;
 import smithies.textadventure.interactable.climbable.ClimbInteraction;
 import smithies.textadventure.interactable.climbable.ClimbResult;
 import smithies.textadventure.item.Inventory;

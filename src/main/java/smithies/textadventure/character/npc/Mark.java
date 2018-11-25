@@ -6,10 +6,14 @@ import smithies.textadventure.character.npc.move.MoveState;
 import smithies.textadventure.character.npc.move.MoveToCharacter;
 import smithies.textadventure.character.npc.move.MoveToRoom;
 import smithies.textadventure.character.npc.move.StationaryState;
+import smithies.textadventure.command.Adverb;
+import smithies.textadventure.command.state.Whine;
 import smithies.textadventure.item.Inventory;
 import smithies.textadventure.map.DungeonMap;
 import smithies.textadventure.rooms.Room;
 import smithies.textadventure.rooms.RoomName;
+import smithies.textadventure.ui.DisplayConsoleOutput;
+import smithies.textadventure.ui.DisplayOutput;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,11 +24,14 @@ public class Mark extends BaseNpcCharacter {
 
     private static final Logger LOG = LoggerFactory.getLogger(Mark.class);
     public static final Random RANDOM = new Random();
+    public static final int RATING_MAX = 10;
 
     private MoveState currentMoveState;
     private AtomicInteger turnNumber = new AtomicInteger(0);
     private boolean awake = false;
     private boolean sitting = false;
+    private int sashaFondnessRating = 7;
+    private int wakeUpRating = 7;
 
     public Mark(DungeonMap map, Room currentRoom) {
         super(map);
@@ -61,6 +68,13 @@ public class Mark extends BaseNpcCharacter {
 
             if (!awake) tryToWakeUp(currentTurnNumber);
 
+            boolean interactWithSasha = currentRoom.equals(player.getCurrentRoom()) && ratingCheck(sashaFondnessRating);
+            if (interactWithSasha) {
+                if (player.getCurrentState() instanceof Whine) {
+                    findAndThrowToy();
+                }
+            }
+
             currentMoveState.move();
 
             if (currentMoveState instanceof MoveToRoom && ((MoveToRoom) currentMoveState).isInTargetRoom()) {
@@ -92,17 +106,28 @@ public class Mark extends BaseNpcCharacter {
 
     }
 
+    private void findAndThrowToy() {
+        currentRoom.takeItem(this).ifPresent(i -> {
+            Room adjacentRoom = map.getMapDirector().getRandomAdjacentRoom(currentRoom);
+            Adverb directionToRoom = currentRoom.getDirectionOfRoom(adjacentRoom.getName()).get();
+            currentRoom.openDoor(directionToRoom);
+            adjacentRoom.addItemToFloor(i);
+            output.displayTextLine(String.format("%s throws the %s into the %s",
+                    getName(), i.getName(), adjacentRoom.getName()));
+        });
+    }
+
     private void changeStationaryState() {
         boolean stationary = currentMoveState instanceof StationaryState;
         boolean roomWithChairs = currentRoom.getName().equals(RoomName.LIVING_ROOM)
                 ||  currentRoom.getName().equals(RoomName.KITCHEN_SOUTH);
         if (stationary && roomWithChairs) {
-            this.sitting = RANDOM.nextInt(10) > 3;
+            this.sitting = ratingCheck(3);
         }
     }
 
     private void tryToWakeUp(int currentTurnNumber) {
-        if (currentTurnNumber > 5 && RANDOM.nextInt(10) > 7) {
+        if (currentTurnNumber > 5 && ratingCheck(wakeUpRating)) {
             List<RoomName> routeExclusions = new ArrayList<>();
             routeExclusions.add(RoomName.BACK_GARDEN);
             routeExclusions.add(RoomName.FRONT_GARDEN);
@@ -110,5 +135,9 @@ public class Mark extends BaseNpcCharacter {
             LOG.debug("{} has woken up!", getName());
             this.awake = true;
         }
+    }
+
+    private boolean ratingCheck(int wakeUpRating) {
+        return RANDOM.nextInt(RATING_MAX) > wakeUpRating;
     }
 }

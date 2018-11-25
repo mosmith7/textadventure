@@ -7,6 +7,8 @@ import smithies.textadventure.command.Adverb;
 import smithies.textadventure.map.DungeonMap;
 import smithies.textadventure.rooms.Room;
 import smithies.textadventure.rooms.RoomName;
+import smithies.textadventure.ui.DisplayConsoleOutput;
+import smithies.textadventure.ui.DisplayOutput;
 
 import java.util.List;
 
@@ -17,6 +19,9 @@ public abstract class BaseNpcCharacter extends BaseCharacter implements Npc {
     protected MoveState currentMoveState;
     protected int moveStateLockedForTurns = 0;
     protected List<Npc> otherNpcs;
+    protected BaseCharacter player;
+
+    protected DisplayOutput output = new DisplayConsoleOutput();
 
     @Autowired
     public BaseNpcCharacter(DungeonMap map) {
@@ -26,6 +31,11 @@ public abstract class BaseNpcCharacter extends BaseCharacter implements Npc {
     @Override
     public void setOtherNpcs(List<Npc> otherNpcs) {
         this.otherNpcs = otherNpcs;
+    }
+
+    @Override
+    public void setPlayer(BaseCharacter player) {
+        this.player = player;
     }
 
     @Override

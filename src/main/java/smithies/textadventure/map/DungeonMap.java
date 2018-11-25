@@ -2,8 +2,6 @@ package smithies.textadventure.map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import smithies.textadventure.command.Adverb;
-import smithies.textadventure.command.Directions;
 import smithies.textadventure.rooms.Room;
 import smithies.textadventure.rooms.RoomBuilder;
 import smithies.textadventure.rooms.RoomName;
@@ -16,6 +14,7 @@ import java.util.List;
 public class DungeonMap {
 
     private List<Room> rooms = new ArrayList<>();
+    private MapDirector mapDirector;
 
     @Autowired
     public DungeonMap() {
@@ -25,6 +24,8 @@ public class DungeonMap {
         buildStairs();
 
         buildUpstairsRooms();
+
+        this.mapDirector = new MapDirector(this);
 
     }
 
@@ -163,5 +164,9 @@ public class DungeonMap {
 
     public Room get(RoomName name) {
         return rooms.stream().filter(r -> name.equals(r.getName())).findFirst().get();
+    }
+
+    public MapDirector getMapDirector() {
+        return mapDirector;
     }
 }

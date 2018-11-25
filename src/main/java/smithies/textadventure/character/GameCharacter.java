@@ -16,6 +16,10 @@ public interface GameCharacter {
 
     RoomPartition getPartitionInDirection(Adverb direction);
 
+    CharacterState getCurrentState();
+
+    void setCurrentState(CharacterState currentState);
+
     void viewInventory();
 
     boolean isInventoryFull();

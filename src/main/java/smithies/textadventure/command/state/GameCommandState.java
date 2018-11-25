@@ -1,6 +1,8 @@
 package smithies.textadventure.command.state;
 
-public interface GameCommandState {
+import smithies.textadventure.character.CharacterState;
+
+public interface GameCommandState extends CharacterState {
 
     void run();
 }
