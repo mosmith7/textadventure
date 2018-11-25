@@ -14,6 +14,8 @@ import java.util.List;
 public class DungeonMap {
 
     private List<Room> rooms = new ArrayList<>();
+    private List<Room> forbiddenRooms = new ArrayList<>();
+
     private MapDirector mapDirector;
 
     @Autowired
@@ -27,6 +29,14 @@ public class DungeonMap {
 
         this.mapDirector = new MapDirector(this);
 
+        this.rooms.forEach(r -> {
+            if (r.isForbiddenRoom()) forbiddenRooms.add(r);
+        });
+
+    }
+
+    public List<Room> getForbiddenRooms() {
+        return forbiddenRooms;
     }
 
     public Room getRoomByName(RoomName roomName) {

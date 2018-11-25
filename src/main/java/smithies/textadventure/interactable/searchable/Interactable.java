@@ -49,7 +49,7 @@ public abstract class Interactable extends Nameable implements Searchable, Climb
                 Item itemToReturn = items.get(0);
                 items.remove(itemToReturn);
                 output.displayTextLine(String.format("%s takes a %s from %s the %s",
-                        npc.getName(), itemToReturn.getName(), key, getName()));
+                        npc.getNameForSasha(), itemToReturn.getName(), key, getName()));
                 return Optional.of(itemToReturn);
             }
         }

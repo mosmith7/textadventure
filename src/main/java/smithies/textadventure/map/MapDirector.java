@@ -7,6 +7,7 @@ import smithies.textadventure.rooms.RoomName;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class MapDirector {
 
@@ -40,8 +41,9 @@ public class MapDirector {
         return route;
     }
 
-    public Room getRandomAdjacentRoom(Room currentRoom) {
-        return map.get(getRandomNextRoomName(currentRoom, new ArrayList<>()));
+    public Room getRandomAdjacentRoom(Room currentRoom, ArrayList<RoomName> roomExclusions, boolean excludeForbiddenRooms) {
+        if (excludeForbiddenRooms) roomExclusions.addAll(map.getForbiddenRooms().stream().map(Room::getName).collect(Collectors.toList()));
+        return map.get(getRandomNextRoomName(currentRoom, roomExclusions));
     }
 
     private List<RoomName> continueRoute(Room currentRoom, List<RoomName> route, List<RoomName> routeExclusions) {

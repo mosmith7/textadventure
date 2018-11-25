@@ -254,7 +254,6 @@ public class Room {
             itemsInRoom.remove(0);
             return Optional.of(item);
         } else {
-            List<Noun> itemNamesInSearchables = new ArrayList<>();
             for (Interactable searchable : searchables) {
                 if (!searchable.peek().isEmpty()) {
                     return searchable.pop(npc);

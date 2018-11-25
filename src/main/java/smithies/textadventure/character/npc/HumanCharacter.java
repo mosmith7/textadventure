@@ -12,17 +12,15 @@ import smithies.textadventure.item.Inventory;
 import smithies.textadventure.map.DungeonMap;
 import smithies.textadventure.rooms.Room;
 import smithies.textadventure.rooms.RoomName;
-import smithies.textadventure.ui.DisplayConsoleOutput;
-import smithies.textadventure.ui.DisplayOutput;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class Mark extends BaseNpcCharacter {
+public class HumanCharacter extends BaseNpcCharacter {
 
-    private static final Logger LOG = LoggerFactory.getLogger(Mark.class);
+    private static final Logger LOG = LoggerFactory.getLogger(HumanCharacter.class);
     public static final Random RANDOM = new Random();
     public static final int RATING_MAX = 10;
 
@@ -30,24 +28,30 @@ public class Mark extends BaseNpcCharacter {
     private AtomicInteger turnNumber = new AtomicInteger(0);
     private boolean awake = false;
     private boolean sitting = false;
-    private int sashaFondnessRating = 7;
-    private int wakeUpRating = 7;
+    private int sashaFondnessRating;
+    private int wakeUpRating;
+    private String name;
+    private String nameForSasha;
 
-    public Mark(DungeonMap map, Room currentRoom) {
+    public HumanCharacter(String name, String nameForSasha, DungeonMap map, Room currentRoom, int sashaFondnessRating, int wakeUpRating) {
         super(map);
+        this.name = name;
+        this.nameForSasha = nameForSasha;
         this.currentRoom = currentRoom;
         this.inventory = new Inventory(5);
         this.currentMoveState = new StationaryState(this);
+        this.sashaFondnessRating = sashaFondnessRating;
+        this.wakeUpRating = wakeUpRating;
     }
 
     @Override
     public String getName() {
-        return "Mark";
+        return name;
     }
 
     @Override
     public String getNameForSasha() {
-        return "Your favourite biped";
+        return nameForSasha;
     }
 
     @Override
@@ -73,7 +77,7 @@ public class Mark extends BaseNpcCharacter {
                 if (player.getCurrentState() instanceof Whine) {
                     findAndThrowToy();
                 }
-                output.displayTextLine(String.format("%s is stroking you", this.getName()));
+                output.displayTextLine(String.format("%s is stroking you", this.getNameForSasha()));
             } else {
                 currentMoveState.move();
 
@@ -108,18 +112,20 @@ public class Mark extends BaseNpcCharacter {
     }
 
     private boolean interactWithSashaCheck() {
-        return (currentRoom.equals(player.getCurrentRoom()) && ratingCheck(sashaFondnessRating)) ||
-                (player.getCurrentState() instanceof Whine && sashaFondnessRating > RATING_MAX / 2);
+        return currentRoom.equals(player.getCurrentRoom()) && ((ratingCheck(sashaFondnessRating)) ||
+                (player.getCurrentState() instanceof Whine && sashaFondnessRating > RATING_MAX / 2));
     }
 
     private void findAndThrowToy() {
         currentRoom.takeItem(this).ifPresent(i -> {
-            Room adjacentRoom = map.getMapDirector().getRandomAdjacentRoom(currentRoom);
+            ArrayList<RoomName> excludeRooms = new ArrayList<>();
+            excludeRooms.add(RoomName.FRONT_GARDEN);
+            Room adjacentRoom = map.getMapDirector().getRandomAdjacentRoom(currentRoom, excludeRooms, true);
             Adverb directionToRoom = currentRoom.getDirectionOfRoom(adjacentRoom.getName()).get();
             currentRoom.openDoor(directionToRoom);
             adjacentRoom.addItemToFloor(i);
             output.displayTextLine(String.format("%s throws the %s into the %s",
-                    getName(), i.getName(), adjacentRoom.getName()));
+                    getNameForSasha(), i.getName(), adjacentRoom.getName()));
         });
     }
 
@@ -144,6 +150,6 @@ public class Mark extends BaseNpcCharacter {
     }
 
     private boolean ratingCheck(int rating) {
-        return RANDOM.nextInt(RATING_MAX) > rating;
+        return RANDOM.nextInt(RATING_MAX) < rating;
     }
 }

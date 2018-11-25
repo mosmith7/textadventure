@@ -2,7 +2,7 @@ package smithies.textadventure.session;
 
 import smithies.textadventure.character.BaseCharacter;
 import smithies.textadventure.character.Player;
-import smithies.textadventure.character.npc.Mark;
+import smithies.textadventure.character.npc.HumanCharacter;
 import smithies.textadventure.character.npc.Misty;
 import smithies.textadventure.character.npc.Npc;
 import smithies.textadventure.command.Adverb;
@@ -12,7 +12,6 @@ import smithies.textadventure.command.UserInputCommand;
 import smithies.textadventure.command.state.ViewInventory;
 import smithies.textadventure.interactable.searchable.DogBed;
 import smithies.textadventure.interactable.searchable.Interactable;
-import smithies.textadventure.interactable.searchable.Searchable;
 import smithies.textadventure.interactable.searchable.Sideboard;
 import smithies.textadventure.item.*;
 import smithies.textadventure.map.DungeonMap;
@@ -111,7 +110,16 @@ public class SessionManager {
 
     private void initialiseNpcs(BaseCharacter player) {
         npcs.add(new Misty(map, map.get(RoomName.LIVING_ROOM)));
-        npcs.add(new Mark(map, map.get(RoomName.BEDROOM_ONE)));
+        HumanCharacter mark = new HumanCharacter("Mark", "Your favourite biped", map, map.get(RoomName.BEDROOM_ONE), 7, 6);
+        npcs.add(mark);
+        HumanCharacter maria = new HumanCharacter("Maria", "Your favourite female biped", map, map.get(RoomName.BEDROOM_TWO), 8, 5);
+        npcs.add(maria);
+        HumanCharacter alan = new HumanCharacter("Alan", "The one you're unsure of", map, map.get(RoomName.BEDROOM_THREE), 2, 1);
+        npcs.add(alan);
+        HumanCharacter susan = new HumanCharacter("Susan", "The one that feeds you", map, map.get(RoomName.BEDROOM_FOUR), 6, 3);
+        npcs.add(susan);
+        HumanCharacter steve = new HumanCharacter("Steve", "The one that stays up all night", map, map.get(RoomName.BEDROOM_THREE), 6, 2);
+        npcs.add(steve);
 
         npcs.forEach(npc -> {
             npc.setOtherNpcs(npcs);
