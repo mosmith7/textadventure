@@ -68,42 +68,48 @@ public class Mark extends BaseNpcCharacter {
 
             if (!awake) tryToWakeUp(currentTurnNumber);
 
-            boolean interactWithSasha = currentRoom.equals(player.getCurrentRoom()) && ratingCheck(sashaFondnessRating);
+            boolean interactWithSasha = interactWithSashaCheck();
             if (interactWithSasha) {
                 if (player.getCurrentState() instanceof Whine) {
                     findAndThrowToy();
                 }
+                output.displayTextLine(String.format("%s is stroking you", this.getName()));
+            } else {
+                currentMoveState.move();
+
+                if (currentMoveState instanceof MoveToRoom && ((MoveToRoom) currentMoveState).isInTargetRoom()) {
+                    this.currentMoveState = new StationaryState(this);
+                    LOG.debug("{} has changed state to {}", getName(), currentMoveState);
+                }
+
+                if (currentMoveState instanceof MoveToCharacter && ((MoveToCharacter) currentMoveState).isWithTargetNpc()) {
+                    int turnsToRemainInSameRoom = ((MoveToCharacter) currentMoveState).getTurnsToRemainInSameRoom();
+                    this.currentMoveState = new StationaryState(this);
+                    this.moveStateLockedForTurns = turnsToRemainInSameRoom;
+                    LOG.debug("{} has changed state to {}", getName(), currentMoveState);
+                }
+
+                if (currentTurnNumber < 20 && RoomName.LIVING_ROOM.equals(currentRoom.getName())) {
+                    List<RoomName> avoidRooms = new ArrayList<>();
+                    avoidRooms.add(RoomName.STAIRS_SOUTH);
+                    avoidRooms.add(RoomName.FRONT_GARDEN);
+                    avoidRooms.add(RoomName.BACK_GARDEN);
+                    Npc misty = otherNpcs.stream().filter(npc -> "Misty".equals(npc.getName())).findFirst().get();
+                    currentMoveState = new MoveToCharacter(this, map, misty, avoidRooms);
+                }
+
+                changeStationaryState();
             }
-
-            currentMoveState.move();
-
-            if (currentMoveState instanceof MoveToRoom && ((MoveToRoom) currentMoveState).isInTargetRoom()) {
-                this.currentMoveState = new StationaryState(this);
-                LOG.debug("{} has changed state to {}", getName(), currentMoveState);
-            }
-
-            if (currentMoveState instanceof MoveToCharacter && ((MoveToCharacter) currentMoveState).isWithTargetNpc()) {
-                int turnsToRemainInSameRoom = ((MoveToCharacter) currentMoveState).getTurnsToRemainInSameRoom();
-                this.currentMoveState = new StationaryState(this);
-                this.moveStateLockedForTurns = turnsToRemainInSameRoom;
-                LOG.debug("{} has changed state to {}", getName(), currentMoveState);
-            }
-
-            if (currentTurnNumber < 20 && RoomName.LIVING_ROOM.equals(currentRoom.getName())) {
-                List<RoomName> avoidRooms = new ArrayList<>();
-                avoidRooms.add(RoomName.STAIRS_SOUTH);
-                avoidRooms.add(RoomName.FRONT_GARDEN);
-                avoidRooms.add(RoomName.BACK_GARDEN);
-                Npc misty = otherNpcs.stream().filter(npc -> "Misty".equals(npc.getName())).findFirst().get();
-                currentMoveState = new MoveToCharacter(this, map, misty, avoidRooms);
-            }
-
-            changeStationaryState();
         } else {
             currentMoveState.move();
             moveStateLockedForTurns--;
         }
 
+    }
+
+    private boolean interactWithSashaCheck() {
+        return (currentRoom.equals(player.getCurrentRoom()) && ratingCheck(sashaFondnessRating)) ||
+                (player.getCurrentState() instanceof Whine && sashaFondnessRating > RATING_MAX / 2);
     }
 
     private void findAndThrowToy() {
@@ -137,7 +143,7 @@ public class Mark extends BaseNpcCharacter {
         }
     }
 
-    private boolean ratingCheck(int wakeUpRating) {
-        return RANDOM.nextInt(RATING_MAX) > wakeUpRating;
+    private boolean ratingCheck(int rating) {
+        return RANDOM.nextInt(RATING_MAX) > rating;
     }
 }
