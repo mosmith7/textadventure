@@ -55,6 +55,17 @@ public class Room {
         return partitionByDirection.getOrDefault(direction, new Deadend());
     }
 
+    public Map<Adverb, Door> getDoors() {
+        Map<Adverb, Door> doorsByDirection = new HashMap<>();
+        for (Adverb direction : Directions.ALL_DIRECTIONS) {
+            RoomPartition partition = partitionByDirection.getOrDefault(direction, new Deadend());
+            if (partition instanceof Door) {
+                doorsByDirection.put(direction, (Door) partition);
+            }
+        }
+        return doorsByDirection;
+    }
+
     public void openDoor(Adverb direction) {
         RoomPartition partition = partitionByDirection.get(direction);
         if (partition instanceof ClosedDoor) {

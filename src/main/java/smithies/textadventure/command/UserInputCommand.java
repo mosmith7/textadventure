@@ -3,13 +3,19 @@ package smithies.textadventure.command;
 import smithies.textadventure.character.Player;
 import smithies.textadventure.command.state.*;
 import smithies.textadventure.map.DungeonMap;
+import smithies.textadventure.rooms.partition.Door;
+import smithies.textadventure.ui.DisplayConsoleOutput;
+import smithies.textadventure.ui.DisplayOutput;
 
+import java.util.ArrayList;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 
 public class UserInputCommand {
 
     private CommandCache commandCache;
+    private DisplayOutput output = new DisplayConsoleOutput();
 
     private DungeonMap map;
 
@@ -64,6 +70,13 @@ public class UserInputCommand {
             if (cachedVerb.isPresent() && cachedAdverb.isPresent()) {
                 verb = cachedVerb.get();
                 adverb = cachedAdverb.get();
+            }
+        } else if (verb == null && noun == null) {
+            Optional<Verb> cachedVerb = commandCache.getCachedVerb();
+            Optional<Noun> cachedNoun = commandCache.getCachedNoun();
+            if (cachedVerb.isPresent() && cachedNoun.isPresent()) {
+                verb = cachedVerb.get();
+                noun = cachedNoun.get();
             }
         } else if (verb == null) {
             commandCache.getCachedVerb().ifPresent(v -> verb = v);
@@ -122,8 +135,27 @@ public class UserInputCommand {
             command = new Whine();
         }  else if (Verb.GROWL.equals(verb)) {
             command = new Growl();
-        }  else if (Verb.SCRATCH.equals(verb)) {
-            command = new Scratch(noun);
+        } else if (Verb.SCRATCH.equals(verb)) {
+            if (Noun.DOOR.equals(noun)) {
+                Map<Adverb, Door> doors = player.getCurrentRoom().getDoors();
+                int totalDoors = doors.size();
+                if (totalDoors == 0) {
+                    output.displayTextLine("There are no doors in the current room");
+                } else if (totalDoors == 1) {
+                    Door door = new ArrayList<>(doors.values()).get(0);
+                    Adverb direction = new ArrayList<>(doors.keySet()).get(0);
+                    command = new ScratchDoor(door, direction);
+                } else {
+                    if (adverb == null) {
+                        commandCache.displayQuestionAndRetainVerbAndNoun("Which door (in what direction) do you want to scratch?", verb, noun);
+                        questionReturned = true;
+                    } else {
+                        command = new ScratchDoor(doors.get(adverb), adverb);
+                    }
+                }
+            } else {
+                command = new Scratch(noun);
+            }
         } else if (Verb.CLIMB.equals(verb)) {
             // Deal with climbing stairs
             if (Noun.STAIRS == noun) {

@@ -14,6 +14,8 @@ public enum Noun {
     SIDEBOARD("sideboard"),
     DOG_BED("dog bed", "bed"),
 
+    DOOR("door"),
+
     ;
 
     private List<String> aliases = new ArrayList<>();

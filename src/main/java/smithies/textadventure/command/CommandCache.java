@@ -11,6 +11,7 @@ public class CommandCache {
 
     private Verb verb;
     private Adverb adverb;
+    private Noun noun;
 
     public void displayQuestionAndRetainVerb(String line, Verb verb) {
         this.verb = verb;
@@ -22,6 +23,11 @@ public class CommandCache {
         displayQuestionAndRetainVerb(line, verb);
     }
 
+    public void displayQuestionAndRetainVerbAndNoun(String line, Verb verb, Noun noun) {
+        this.noun = noun;
+        displayQuestionAndRetainVerb(line, verb);
+    }
+
     public Optional<Verb> getCachedVerb() {
         return Optional.ofNullable(this.verb);
     }
@@ -30,8 +36,13 @@ public class CommandCache {
         return Optional.ofNullable(this.adverb);
     }
 
+    public Optional<Noun> getCachedNoun() {
+        return Optional.ofNullable(this.noun);
+    }
+
     public void clearCache() {
         this.verb = null;
         this.adverb = null;
+        this.noun = null;
     }
 }

@@ -7,11 +7,14 @@ import smithies.textadventure.character.npc.move.MoveToCharacter;
 import smithies.textadventure.character.npc.move.MoveToRoom;
 import smithies.textadventure.character.npc.move.StationaryState;
 import smithies.textadventure.command.Adverb;
+import smithies.textadventure.command.state.Scratch;
+import smithies.textadventure.command.state.ScratchDoor;
 import smithies.textadventure.command.state.Whine;
 import smithies.textadventure.item.Inventory;
 import smithies.textadventure.map.DungeonMap;
 import smithies.textadventure.rooms.Room;
 import smithies.textadventure.rooms.RoomName;
+import smithies.textadventure.rooms.partition.Door;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,8 +79,11 @@ public class HumanCharacter extends BaseNpcCharacter {
             if (interactWithSasha) {
                 if (player.getCurrentState() instanceof Whine) {
                     findAndThrowToy();
+                } else if (player.getCurrentState() instanceof ScratchDoor) {
+                    openDoorForSasha();
+                } else {
+                    output.displayTextLine(String.format("%s is stroking you", this.getNameForSasha()));
                 }
-                output.displayTextLine(String.format("%s is stroking you", this.getNameForSasha()));
             } else {
                 currentMoveState.move();
 
@@ -113,7 +119,8 @@ public class HumanCharacter extends BaseNpcCharacter {
 
     private boolean interactWithSashaCheck() {
         return currentRoom.equals(player.getCurrentRoom()) && ((ratingCheck(sashaFondnessRating)) ||
-                (player.getCurrentState() instanceof Whine && sashaFondnessRating > RATING_MAX / 2));
+                (player.getCurrentState() instanceof Whine && sashaFondnessRating > RATING_MAX / 2) ||
+                (player.getCurrentState() instanceof ScratchDoor && sashaFondnessRating > RATING_MAX / 2));
     }
 
     private void findAndThrowToy() {
@@ -127,6 +134,19 @@ public class HumanCharacter extends BaseNpcCharacter {
             output.displayTextLine(String.format("%s throws the %s into the %s",
                     getNameForSasha(), i.getName(), adjacentRoom.getName()));
         });
+    }
+
+    private void openDoorForSasha() {
+        ScratchDoor state = (ScratchDoor) player.getCurrentState();
+        Adverb direction = state.getDirection();
+        Door door = state.getDoor();
+        if (!door.isLocked()) {
+            if (!door.isOpen()) {
+                currentRoom.openDoor(direction);
+                output.displayTextLine(String.format("%s opens the %s door for you",
+                        getNameForSasha(), direction));
+            }
+        }
     }
 
     private void changeStationaryState() {
