@@ -6,6 +6,8 @@ public enum SearchableName {
 
     SIDEBOARD(Noun.SIDEBOARD),
     DOG_BED(Noun.DOG_BED),
+    PIANO(Noun.PIANO),
+    DESK(Noun.DESK)
 
     ;
 

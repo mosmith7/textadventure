@@ -13,6 +13,8 @@ public enum Noun {
 
     SIDEBOARD("sideboard"),
     DOG_BED("dog bed", "bed"),
+    PIANO("piano", "keyboard"),
+    DESK("desk"),
 
     DOOR("door"),
 

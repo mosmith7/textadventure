@@ -16,4 +16,12 @@ public interface Searchable {
     List<Noun> peek();
 
     void addItem(Item item, Adverb adverb);
+
+    void searchUnder(Optional<Item> optionalItem);
+
+    void searchIn(Optional<Item> optionalItem);
+
+    void searchOn(Optional<Item> optionalItem);
+
+    void searchFail(Adverb direction);
 }

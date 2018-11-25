@@ -28,7 +28,11 @@ public abstract class Interactable extends Nameable implements Searchable, Climb
     public Optional<Item> search(Adverb adverb) {
         // Intended to be called from searchAndResolve method
         List<Item> items = itemsByAdverb.getOrDefault(adverb, new ArrayList<>());
-        return Optional.ofNullable(items.get(0));
+        if (items.isEmpty()) {
+            return Optional.empty();
+        } else {
+            return Optional.of(items.get(0));
+        }
     }
 
     public List<Noun> peek() {
@@ -83,6 +87,56 @@ public abstract class Interactable extends Nameable implements Searchable, Climb
 
     public void displayClimbDownSuccess() {
         output.displayTextLine("You successfully climb down off of the " + getName());
+    }
+
+    @Override
+    public Optional<Item> searchAndResolve(Adverb adverb) {
+        Optional<Item> optionalItem = search(adverb);
+        switch (adverb) {
+            case UNDER:
+                searchUnder(optionalItem);
+                break;
+            case IN:
+                searchIn(optionalItem);
+                break;
+            case ON:
+                searchOn(optionalItem);
+                break;
+            default:
+                break;
+        }
+
+        return Optional.empty();
+    }
+
+    @Override
+    public void searchUnder(Optional<Item> optionalItem) {
+        if (optionalItem.isPresent()) {
+            output.displayTextLines("You look under the " + getName(),
+                    "Yes! That's it! You grab the " + optionalItem.get().getName());
+        } else {
+            searchFail(Adverb.UNDER);
+        }
+    }
+
+    @Override
+    public void searchIn(Optional<Item> optionalItem) {
+        output.displayTextLines(String.format("You are not sure how to search %s the %s", Adverb.IN, getName()));
+    }
+
+    @Override
+    public void searchOn(Optional<Item> optionalItem) {
+        if (optionalItem.isPresent()) {
+            output.displayTextLines("You balance on your hind legs.",
+                    "Yes! That's it! You grab the " + optionalItem.get().getName());
+        } else {
+            searchFail(Adverb.ON);
+        }
+    }
+
+    @Override
+    public void searchFail(Adverb direction) {
+        output.displayTextLines(String.format("You search %s the %s. Nothing.", direction, getName()));
     }
 
 }

@@ -10,9 +10,7 @@ import smithies.textadventure.command.CommandHandler;
 import smithies.textadventure.command.Noun;
 import smithies.textadventure.command.UserInputCommand;
 import smithies.textadventure.command.state.ViewInventory;
-import smithies.textadventure.interactable.searchable.DogBed;
-import smithies.textadventure.interactable.searchable.Interactable;
-import smithies.textadventure.interactable.searchable.Sideboard;
+import smithies.textadventure.interactable.searchable.*;
 import smithies.textadventure.item.*;
 import smithies.textadventure.map.DungeonMap;
 import smithies.textadventure.rooms.Room;
@@ -99,7 +97,18 @@ public class SessionManager {
         hideItemInSearchable(RoomName.KITCHEN_SOUTH, dogBed, ballAndRope, Adverb.UNDER);
         collectables.add(ballAndRope);
 
+        Piano piano = new Piano("Against the north wall is a " + Noun.PIANO);
+        addSearchableToRoom(RoomName.STUDY, piano);
+
+        Desk desk = new Desk("Against the south wall is a " + Noun.DESK);
+        addSearchableToRoom(RoomName.STUDY, desk);
+
         victoryLocation = dogBed;
+    }
+
+    private void addSearchableToRoom(RoomName roomName, Interactable searchable) {
+        Room room = map.get(roomName);
+        room.addSearchable(searchable);
     }
 
     private void hideItemInSearchable(RoomName roomName, Interactable searchable, Item item, Adverb adverb) {
